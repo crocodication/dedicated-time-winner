@@ -195,7 +195,24 @@ export function Home() {
 		setIndex(dataIndex > index ? index : (index > 0 ? index - 1 : null))
 	}
 
-	function addItem(toIndex) {
-		alert(toIndex)
+	async function addItem(toIndex) {
+		const currentData = JSON.parse(JSON.stringify(data))
+
+		currentData.splice(
+			toIndex,
+			0,
+			{
+				type: 'productivity',
+				activityName: 'Monic',
+				taskName: 'Apa ya',
+				startedAt: '',
+				emoji: '',
+				efforts: []
+			}
+		)
+		
+		await setData(currentData)
+
+		setIndex(index + 1)
 	}
 }
