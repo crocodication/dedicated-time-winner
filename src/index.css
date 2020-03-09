@@ -1,0 +1,326 @@
+body {
+    background-color: black;
+    margin: 0px;
+}
+
+h1 {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    margin: 0px;
+}
+
+h2 {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    margin: 0px;
+}
+
+h3 {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    margin: 0px;
+}
+
+p {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    margin: 0px;
+}
+
+a {
+    text-decoration-line: none;
+}
+
+/* -------------------------------------------------------------------- */
+
+.home-container {
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+.home-title-container {
+    align-items: center;
+    display: flex;
+    height: 100px;
+    justify-content: center;
+}
+
+.home-content-container {
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+/* -------------------------------------------------------------------- */
+
+.mode-button {
+    align-self: center;
+    border: 2px solid white;
+    border-radius: 7px;
+    color: white;
+    display: flex;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: bold;
+    margin-bottom: 20px;
+    padding: 10px
+}
+
+/* -------------------------------------------------------------------- */
+
+.add-item {
+    color: white;
+    border: 5px dashed white;
+    border-radius: 20px;
+    display: flex;
+    height: 110px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.add-item a {
+    align-items: center;
+    display: flex;
+    flex: 1;
+    justify-content: center;
+}
+
+.add-item a p {
+    color: white;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 24px;
+}
+
+/* -------------------------------------------------------------------- */
+
+.item-filler {
+    height: 20px;
+}
+
+.item-filler:hover {
+    color: white;
+    border: 5px dashed white;
+    border-radius: 20px;
+    display: flex;
+    height: 110px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.item-filler a {
+    display: none;
+}
+
+.item-filler:hover a {
+    align-items: center;
+    display: flex;
+    flex: 1;
+    justify-content: center;
+}
+
+.item-filler:hover a p {
+    color: white;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 24px;
+}
+
+.item-filler-permanent {
+    height: 20px;
+}
+
+/* -------------------------------------------------------------------- */
+
+.productivity-item-container {
+    border-radius: 20px;
+    padding: 20px;
+}
+
+.productivity-item-top-details-container {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.productivity-item-activity-name {
+    font-size: 20px;
+}
+
+.productivity-item-task-name {
+    color: black;
+    font-size: 28px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.productivity-item-started-at-and-minutes {
+    color: gray;
+    margin-top: 10px;
+}
+
+.productivity-item-emoji-background {
+    align-items: center;
+    background-color: papayawhip;
+    border: 5px solid gainsboro;
+    border-radius: calc(110px / 2);
+    display: flex;
+    height: 110px;
+    justify-content: center;
+    margin-left: 20px;
+    width: 110px;
+}
+
+.productivity-item-emoji {
+    font-size: 56px;
+}
+
+.productivity-item-efforts-container {
+    border-radius: 10px;
+    margin-top: 20px;
+    overflow: hidden;
+}
+
+.productivity-item-efforts-top-container {
+    align-items: center;
+    background-color: lightgray;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.productivity-item-efforts-title-text {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.productivity-item-collapse-expand-button {
+    color: crimson;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.productivity-item-efforts-bottom-container {
+    background-color: gainsboro;
+    padding: 20px;
+}
+
+.productivity-item-effort-container {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+}
+
+.productivity-item-effort-text {
+    font-size: 20px;
+}
+
+.productivity-item-effort-emoji-container {
+    align-items: center;
+    border: 3px solid rgb(235,235,235);
+    border-radius: calc(70px / 2);
+    display: flex;
+    height: 70px;
+    justify-content: center;
+    width: 70px;
+}
+
+.productivity-item-effort-emoji {
+    font-size: 32px;
+}
+
+.productivity-item-options-container {
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+}
+
+.productivity-item-start-button {
+    align-items: center;
+    background-color: green;
+    border-radius: 10px;
+    color: white;
+    display: flex;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: bold;
+    justify-content: center;
+    padding: 20px;
+    width: 80px;
+}
+
+.productivity-item-remove-button {
+    align-items: center;
+    background-color: crimson;
+    border-radius: 10px;
+    color: white;
+    display: flex;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: bold;
+    justify-content: center;
+    padding: 20px;
+    width: 80px;
+}
+
+/* -------------------------------------------------------------------- */
+
+.break-item-container {
+    align-items: center;
+    border-radius: 20px;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.break-item-title {
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.break-item-started-at-and-minutes {
+    color: lightgray;
+    margin-top: 10px;
+}
+
+.break-item-emoji-background {
+    align-items: center;
+    background-color: lightgray;
+    border: 5px solid gainsboro;
+    border-radius: calc(110px / 2);
+    display: flex;
+    height: 110px;
+    justify-content: center;
+    margin-left: 20px;
+    width: 110px;
+}
+
+.break-item-emoji {
+    font-size: 56px;
+}
+
+.break-item-options-container {
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+}
+
+.break-item-start-button {
+    align-items: center;
+    background-color: green;
+    border-radius: 10px;
+    color: white;
+    display: flex;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: bold;
+    justify-content: center;
+    padding: 20px;
+    width: 80px;
+}
+
+.break-item-remove-button {
+    align-items: center;
+    background-color: crimson;
+    border-radius: 10px;
+    color: white;
+    display: flex;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: bold;
+    justify-content: center;
+    padding: 20px;
+    width: 80px;
+}
