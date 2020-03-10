@@ -8,32 +8,32 @@ export function Home() {
 
 	const [index, setIndex] = useState(null)
 	const [data, setData] = useState([
-		// {
-		// 	type: 'break',
-		// 	startedAt: '11:40',
-		// 	minutes: 20
-		// },
-		// {
-		// 	type: 'productivity',
-		// 	activityName: 'Sewa - Sewa',
-		// 	taskName: 'Membuat layout home',
-		// 	startedAt: '08:30',
-		// 	emoji: '💪',
-		// 	efforts: [
-		// 		{
-		// 			minutes: 90,
-		// 			type: 'productive'
-		// 		},
-		// 		{
-		// 			minutes: 20,
-		// 			type: 'break'
-		// 		},
-		// 		{
-		// 			minutes: 90,
-		// 			type: 'productive'
-		// 		}
-		// 	]
-		// }
+		{
+			type: 'break',
+			startedAt: '11:40',
+			minutes: 20
+		},
+		{
+			type: 'productivity',
+			activityName: 'Sewa - Sewa',
+			taskName: 'Membuat layout home',
+			startedAt: '08:30',
+			emoji: '💪',
+			efforts: [
+				{
+					minutes: 90,
+					type: 'productive'
+				},
+				{
+					minutes: 20,
+					type: 'break'
+				},
+				{
+					minutes: 90,
+					type: 'productive'
+				}
+			]
+		}
 	])
 	const [mode, setMode] = useState('Work')
 	const [addTaskToIndex, setAddTaskToIndex] = useState(null)

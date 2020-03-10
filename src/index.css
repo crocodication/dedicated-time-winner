@@ -129,6 +129,10 @@ a {
     min-height: 110px;
 }
 
+.item-filler-permanent {
+    height: 20px;
+}
+
 /* -------------------------------------------------------------------- */
 
 .productivity-item-container-work-mode {
