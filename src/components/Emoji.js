@@ -1,14 +1,16 @@
 export function Emoji(props) {
     const React = require('react')
 
+    const { label, symbol } = props
+
     return (
         <span
-            aria-hidden = {props.label ? 'false' : 'true'}
-            aria-label = {props.label ? props.label : ''}
+            aria-hidden = {label ? 'false' : 'true'}
+            aria-label = {label ? label : ''}
             className = 'emoji'
             role = 'img'
         >
-            {props.symbol}
+            {symbol}
         </span>
     )
 }

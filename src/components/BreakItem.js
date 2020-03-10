@@ -3,14 +3,15 @@ export function BreakItem(props) {
 
     const { Emoji } = require('../components/Emoji')
 
-    const { item } = props
+    const { focusAtIndex, index, item, mode, onRemove } = props
+
+    const { minutes, startedAt } = item
 
     return (
         <div
-            className = 'break-item-container'
+            className = {'break-item-container-' + mode.toLowerCase() + '-mode'}
             style = {{
-                backgroundColor: props.focusAtIndex === props.index ? 'darkslateblue' : 'gray',
-                opacity: props.mode === 'Work' && props.focusAtIndex !== null && props.focusAtIndex !== props.index ? 0.2 : 1
+                backgroundColor: focusAtIndex === index ? 'darkslateblue' : 'gray'
             }}
         >
             <div>
@@ -21,11 +22,11 @@ export function BreakItem(props) {
                 </p>
 
                 {
-                    item.startedAt !== '' ?
+                    startedAt !== '' ?
                         <p
                             className = 'break-item-started-at-and-minutes'
                         >
-                            Started at {item.startedAt} ({item.minutes} minutes)
+                            Started at {startedAt} ({minutes} minutes)
                         </p>
                         :
                         null
@@ -33,7 +34,7 @@ export function BreakItem(props) {
             </div>
 
             {
-                item.startedAt !== '' ?
+                startedAt !== '' ?
                     <div
                         className = 'break-item-emoji-background'
                     >
@@ -50,7 +51,7 @@ export function BreakItem(props) {
                         className = 'break-item-options-container'
                     >
                         {
-                            props.mode === 'Work' && props.focusAtIndex === props.index ?
+                            mode === 'Work' && focusAtIndex === index ?
                                 <a
                                     className = 'break-item-start-button'
                                     href = '/#'
@@ -62,11 +63,11 @@ export function BreakItem(props) {
                         }
 
                         {
-                            props.mode === 'Edit' ?
+                            mode === 'Edit' ?
                                 <a
                                     className = 'break-item-remove-button'
                                     href = '/#'
-                                    onClick = {props.onRemove}
+                                    onClick = {onRemove}
                                 >
                                     Remove
                                 </a>

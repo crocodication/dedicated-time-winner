@@ -3,14 +3,15 @@ export function ProductivityItem(props) {
 
     const { Emoji } = require('../components/Emoji')
 
-    const { item } = props
+    const { focusAtIndex, index, item, mode, onRemove } = props
+
+    const { activityName, efforts, emoji, startedAt, taskName } = item
 
     return (
         <div
-            className = 'productivity-item-container'
+            className = {'productivity-item-container-' + mode.toLowerCase() + '-mode'}
             style = {{
-                backgroundColor: props.focusAtIndex === props.index ? 'mediumseagreen' : 'white',
-                opacity: props.mode === 'Work' && props.focusAtIndex !== null && props.focusAtIndex !== props.index ? 0.2 : 1
+                backgroundColor: focusAtIndex === index ? 'mediumseagreen' : 'white'
             }}
         >
             <div
@@ -20,24 +21,24 @@ export function ProductivityItem(props) {
                     <p
                         className = 'productivity-item-activity-name'
                         style = {{
-                            color: props.focusAtIndex === props.index ? 'white' : 'gray'
+                            color: focusAtIndex === index ? 'white' : 'gray'
                         }}
                     >
-                        {item.activityName}
+                        {activityName}
                     </p>
 
                     <p
                         className = 'productivity-item-task-name'
                     >
-                        {item.taskName}
+                        {taskName}
                     </p>
 
                     {
-                        item.startedAt !== '' ?
+                        startedAt !== '' ?
                             <p
                                 className = 'productivity-item-started-at-and-minutes'
                             >
-                                Started at {item.startedAt} ({getEffortsMinutes()} minutes)
+                                Started at {startedAt} ({getEffortsMinutes()} minutes)
                             </p>
                             :
                             null
@@ -45,7 +46,7 @@ export function ProductivityItem(props) {
                 </div>
                 
                 {
-                    item.startedAt !== '' ?
+                    startedAt !== '' ?
                         <div
                             className = 'productivity-item-emoji-background'
                         >
@@ -53,7 +54,7 @@ export function ProductivityItem(props) {
                                 className = 'productivity-item-emoji'
                             >
                                 <Emoji
-                                    symbol = {item.emoji}
+                                    symbol = {emoji}
                                 />
                             </p>
                         </div>
@@ -62,7 +63,7 @@ export function ProductivityItem(props) {
                             className = 'productivity-item-options-container'
                         >
                             {
-                                props.mode === 'Work' && props.focusAtIndex === props.index ?
+                                mode === 'Work' && focusAtIndex === index ?
                                     <a
                                         className = 'productivity-item-start-button'
                                         href = '/#'
@@ -74,11 +75,11 @@ export function ProductivityItem(props) {
                             }
 
                             {
-                                props.mode === 'Edit' ?
+                                mode === 'Edit' ?
                                     <a
                                         className = 'productivity-item-remove-button'
                                         href = '/#'
-                                        onClick = {props.onRemove}
+                                        onClick = {onRemove}
                                     >
                                         Remove
                                     </a>
@@ -90,7 +91,7 @@ export function ProductivityItem(props) {
             </div>
 
             {
-                item.startedAt !== '' ?
+                startedAt !== '' ?
                     <div
                         className = 'productivity-item-efforts-container'
                     >
@@ -108,7 +109,9 @@ export function ProductivityItem(props) {
                             className = 'productivity-item-efforts-bottom-container'
                         >
                             {
-                                item.efforts.map((effortItem, effortIndex) => {
+                                efforts.map((effortItem, effortIndex) => {
+                                    const { minutes, type } = effortItem
+
                                     return (
                                         <div
                                             className = 'productivity-item-effort-container'
@@ -120,20 +123,20 @@ export function ProductivityItem(props) {
                                             <p
                                                 className = 'productivity-item-effort-text'
                                             >
-                                                {effortItem.minutes} minutes {effortItem.type}
+                                                {minutes} minutes {type}
                                             </p>
 
                                             <div
                                                 className = 'productivity-item-effort-emoji-container'
                                                 style = {{
-                                                    backgroundColor: effortItem.type === 'productive' ? 'steelblue' : 'gainsboro'
+                                                    backgroundColor: type === 'productive' ? 'steelblue' : 'gainsboro'
                                                 }}
                                             >
                                                 <p
                                                     className = 'productivity-item-effort-emoji'
                                                 >
                                                     <Emoji
-                                                        symbol = {effortItem.type === 'productive' ? '💻' : '💤'}
+                                                        symbol = {type === 'productive' ? '💻' : '💤'}
                                                     />
                                                 </p>
                                             </div>
@@ -152,7 +155,7 @@ export function ProductivityItem(props) {
     function getEffortsMinutes() {
         let minutes = 0
 
-        for(const effort of props.item.efforts) {
+        for(const effort of efforts) {
             minutes += effort.minutes
         }
 

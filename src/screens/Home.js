@@ -4,6 +4,7 @@ export function Home() {
 
 	const { ProductivityItem } = require('../components/ProductivityItem')
 	const { BreakItem } = require('../components/BreakItem')
+	const { AddTaskModal } = require('../components/AddTaskModal')
 
 	const [index, setIndex] = useState(2)
 	const [data, setData] = useState([
@@ -56,6 +57,9 @@ export function Home() {
 		}
 	])
 	const [mode, setMode] = useState('Work')
+	const [addTaskToIndex, setAddTaskToIndex] = useState(null)
+
+	const FADE_OPACITY = 0.2
 
 	return (
 		<div
@@ -67,7 +71,7 @@ export function Home() {
 				<h1
 					style = {{
 						color: 'white',
-						opacity: mode === 'Work' && index !== null ? 0.2 : 1
+						opacity: mode === 'Work' && index !== null ? FADE_OPACITY : 1
 					}}
 				>
 					Productivity Planner
@@ -79,7 +83,7 @@ export function Home() {
 				href = '/#'
 				onClick = {() => setMode(mode === 'Edit' ? 'Work' : 'Edit')}
 				style = {{
-					opacity: mode === 'Work' ? 0.2 : 1
+					opacity: mode === 'Work'  && index !== null ? FADE_OPACITY : 1
 				}}
 			>
 				{mode} Mode
@@ -95,10 +99,10 @@ export function Home() {
 						>
 							<a
 								href = '/#'
-								onClick = {() => addItem(0)}
+								onClick = {() => addTask(0)}
 							>
 								<p>
-									+ Add Item
+									+ Add Task
 								</p>
 							</a>
 						</div>
@@ -121,10 +125,10 @@ export function Home() {
 												>
 													<a
 														href = '/#'
-														onClick = {() => addItem(dataIndex)}
+														onClick = {() => addTask(dataIndex)}
 													>
 														<p>
-															+ Add Item
+															+ Add Task
 														</p>
 													</a>
 												</div>
@@ -137,24 +141,42 @@ export function Home() {
 										null
 								}
 
-								{
-									dataItem.type === 'productivity' ?
-										<ProductivityItem
-											focusAtIndex = {index}
-											index = {dataIndex}
-											item = {dataItem}
-											mode = {mode}
-											onRemove = {() => removeItem(dataIndex)}
-										/>
-										:
-										<BreakItem
-											focusAtIndex = {index}
-											index = {dataIndex}
-											item = {dataItem}
-											mode = {mode}
-											onRemove = {() => removeItem(dataIndex)}
-										/>
-								}
+								<div
+									style = {{
+										opacity: (
+											(
+												mode === 'Work' &&
+												index !== null &&
+												index !== dataIndex
+											)
+											||
+											(
+												mode === 'Edit' &&
+												index !== null &&
+												index < dataIndex
+											)
+										) ? FADE_OPACITY : 1
+									}}
+								>
+									{
+										dataItem.type === 'productivity' ?
+											<ProductivityItem
+												focusAtIndex = {index}
+												index = {dataIndex}
+												item = {dataItem}
+												mode = {mode}
+												onRemove = {() => removeItem(dataIndex)}
+											/>
+											:
+											<BreakItem
+												focusAtIndex = {index}
+												index = {dataIndex}
+												item = {dataItem}
+												mode = {mode}
+												onRemove = {() => removeItem(dataIndex)}
+											/>
+									}
+								</div>
 							</div>
 						)
 					})
@@ -167,10 +189,10 @@ export function Home() {
 						>
 							<a
 								href = '/#'
-								onClick = {() => addItem(data.length)}
+								onClick = {() => addTask(data.length)}
 							>
 								<p>
-									+ Add Item
+									+ Add Task
 								</p>
 							</a>
 						</div>
@@ -178,6 +200,16 @@ export function Home() {
 						null
 				}
 			</div>
+
+			{
+				addTaskToIndex !== null ?
+					<AddTaskModal
+						onAddTask = {(activityName, taskName) => applyAddTask(activityName, taskName)}
+						onDismiss = {() => setAddTaskToIndex(null)}
+					/>
+					:
+					null
+			}
 		</div>
 	)
 
@@ -194,17 +226,21 @@ export function Home() {
 
 		setIndex(dataIndex > index ? index : (index > 0 ? index - 1 : null))
 	}
+	 
+	function addTask(toIndex) {
+		setAddTaskToIndex(toIndex)
+	}
 
-	async function addItem(toIndex) {
+	async function applyAddTask(activityName, taskName) {
 		const currentData = JSON.parse(JSON.stringify(data))
 
 		currentData.splice(
-			toIndex,
+			addTaskToIndex,
 			0,
 			{
 				type: 'productivity',
-				activityName: 'Monic',
-				taskName: 'Apa ya',
+				activityName: activityName,
+				taskName: taskName,
 				startedAt: '',
 				emoji: '',
 				efforts: []
@@ -212,7 +248,7 @@ export function Home() {
 		)
 		
 		await setData(currentData)
-
-		setIndex(index + 1)
+		await setIndex(index == null ? 0 : index + 1)
+		setAddTaskToIndex(null)
 	}
 }
