@@ -85,8 +85,8 @@ a {
     display: flex;
     flex: 1;
     height: 110px;
-    margin-bottom: 20px;
-    margin-top: 20px;
+    margin-bottom: 30px;
+    margin-top: 30px;
 }
 
 .add-item a {
@@ -111,13 +111,13 @@ a {
 /* -------------------------------------------------------------------- */
 
 .item-filler {
-    height: 20px;
+    height: 30px;
 }
 
 .item-filler:hover {
     height: 110px;
-    margin-bottom: 30px;
-    margin-top: 20px;
+    margin-bottom: 40px;
+    margin-top: 30px;
 }
 
 .add-item-filler-container {
@@ -130,7 +130,7 @@ a {
 }
 
 .item-filler-permanent {
-    height: 20px;
+    height: 30px;
 }
 
 /* -------------------------------------------------------------------- */
@@ -423,4 +423,74 @@ a {
     padding: 20px;
     text-align: center;
     width: 60px;
+}
+
+/* -------------------------------------------------------------------- */
+
+.counter-modal-background-container {
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.8);
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+}
+
+.counter-modal-container {
+    background-color: white;
+    border-radius: 7px;
+    padding: 20px;
+    width: 300px;
+}
+
+.counter-modal-title {
+    text-align: center;
+}
+
+.counter-modal-task-name {
+    color: black;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.counter {
+    font-size: 64px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.counter-choice-buttons-container {
+    display: flex;
+    flex-direction: column;
+    width: 275px;
+}
+
+.counter-choice-button {
+    border-radius: 7px;
+    border: 2px solid dimgray;
+    color: black;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 18px;
+    margin-top: 10px;
+    padding: 10px;
+    width: 100%;
+}
+
+.counter-break-button {
+    align-self: center;
+    border-radius: 7px;
+    border: 2px solid lightgray;
+    color: white;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: bold;
+    margin-top: 20px;
+    padding: 20px;
+    text-align: center;
+    width: 75px;
 }

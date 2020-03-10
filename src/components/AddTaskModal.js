@@ -96,7 +96,7 @@ export function AddTaskModal(props) {
                             href = '/#'
                             onClick = {() => onAddTask(activityName, taskName)}
                             style = {{
-                                backgroundColor: 'seagreen'
+                                backgroundColor: 'mediumseagreen'
                             }}
                         >
                             Add

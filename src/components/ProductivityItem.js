@@ -3,9 +3,9 @@ export function ProductivityItem(props) {
 
     const { Emoji } = require('../components/Emoji')
 
-    const { focusAtIndex, index, item, mode, onRemove } = props
+    const { focusAtIndex, index, item, mode, onRemove, onStart } = props
 
-    const { activityName, efforts, emoji, startedAt, taskName } = item
+    const { activityName, emoji, startedAt, minutes, taskName } = item
 
     return (
         <div
@@ -38,7 +38,7 @@ export function ProductivityItem(props) {
                             <p
                                 className = 'productivity-item-started-at-and-minutes'
                             >
-                                Started at {startedAt} ({getEffortsMinutes()} minutes)
+                                Started at {startedAt} ({minutes} minutes)
                             </p>
                             :
                             null
@@ -47,17 +47,22 @@ export function ProductivityItem(props) {
                 
                 {
                     startedAt !== '' ?
-                        <div
-                            className = 'productivity-item-emoji-background'
-                        >
-                            <p
-                                className = 'productivity-item-emoji'
-                            >
-                                <Emoji
-                                    symbol = {emoji}
-                                />
-                            </p>
-                        </div>
+                        (
+                            emoji !== '' ?
+                                <div
+                                    className = 'productivity-item-emoji-background'
+                                >
+                                    <p
+                                        className = 'productivity-item-emoji'
+                                    >
+                                        <Emoji
+                                            symbol = {emoji}
+                                        />
+                                    </p>
+                                </div>
+                                :
+                                null
+                        )
                         :
                         <div
                             className = 'productivity-item-options-container'
@@ -67,6 +72,7 @@ export function ProductivityItem(props) {
                                     <a
                                         className = 'productivity-item-start-button'
                                         href = '/#'
+                                        onClick = {onStart}
                                     >
                                         Start
                                     </a>
@@ -90,7 +96,7 @@ export function ProductivityItem(props) {
                 }
             </div>
 
-            {
+            {/* {
                 startedAt !== '' ?
                     <div
                         className = 'productivity-item-efforts-container'
@@ -148,17 +154,7 @@ export function ProductivityItem(props) {
                     </div>
                     :
                     null
-            }
+            } */}
         </div>
     )
-
-    function getEffortsMinutes() {
-        let minutes = 0
-
-        for(const effort of efforts) {
-            minutes += effort.minutes
-        }
-
-        return minutes
-    }
 }

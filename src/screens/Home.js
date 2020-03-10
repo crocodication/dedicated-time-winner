@@ -1,3 +1,5 @@
+let latestId = 0
+
 export function Home() {
 	const React = require('react')
 	const { useState } = React
@@ -5,42 +7,15 @@ export function Home() {
 	const { ProductivityItem } = require('../components/ProductivityItem')
 	const { BreakItem } = require('../components/BreakItem')
 	const { AddTaskModal } = require('../components/AddTaskModal')
+	const { CounterModal } = require('../components/CounterModal')
 
 	const [index, setIndex] = useState(null)
-	const [data, setData] = useState([
-		{
-			type: 'break',
-			startedAt: '11:40',
-			minutes: 20
-		},
-		{
-			type: 'productivity',
-			activityName: 'Sewa - Sewa',
-			taskName: 'Membuat layout home',
-			startedAt: '08:30',
-			emoji: '💪',
-			efforts: [
-				{
-					minutes: 90,
-					type: 'productive'
-				},
-				{
-					minutes: 20,
-					type: 'break'
-				},
-				{
-					minutes: 90,
-					type: 'productive'
-				}
-			]
-		}
-	])
+	const [data, setData] = useState([])
 	const [mode, setMode] = useState('Work')
 	const [addTaskToIndex, setAddTaskToIndex] = useState(null)
+	const [isProcessingCount, setIsProcessingCount] = useState(false)
 
 	const FADE_OPACITY = 0.2
-
-	let latestId = 0
 
 	return (
 		<div
@@ -202,6 +177,7 @@ export function Home() {
 												item = {dataItem}
 												mode = {mode}
 												onRemove = {() => removeItem(dataIndex)}
+												onStart = {() => setIsProcessingCount(true)}
 											/>
 											:
 											<BreakItem
@@ -257,6 +233,67 @@ export function Home() {
 						null
 				}
 			</div>
+
+			{
+				isProcessingCount ?
+					<CounterModal
+						currentTask = {data[index].taskName}
+						sendProgresses = {async(progresses) => {
+							const newData = JSON.parse(JSON.stringify(data))
+
+							const activityName = newData[index].activityName
+							const taskName = newData[index].taskName
+
+							for(const progressIndex in progresses) {
+								const thisProgress = progresses[progressIndex]
+
+								if(Number(progressIndex) === 0) {
+									newData[index].startedAt = thisProgress.startedAt
+									newData[index].minutes = thisProgress.minutes
+									newData[index].emoji = thisProgress.emoji
+								} else {
+									const progressType = thisProgress.type
+
+									if(progressType === 'productivity') {
+										newData.splice(
+											index,
+											0,
+											{
+												type: 'productivity',
+												activityName: activityName,
+												taskName: taskName,
+												startedAt: thisProgress.startedAt,
+												minutes: thisProgress.minutes,
+												emoji: thisProgress.emoji,
+												id: latestId
+											}
+										)
+									} else if(progressType === 'break') {
+										newData.splice(
+											index,
+											0,
+											{
+												type: 'break',
+												startedAt: thisProgress.startedAt,
+												minutes: thisProgress.minutes,
+												id: latestId
+											}
+										)
+									}
+
+									latestId++
+								}
+							}
+
+							setData(newData)
+							setIndex(index === 0 ? null : (index - 1))
+							setIsProcessingCount(false)
+						}}
+						spendMinutes = {5}
+					/>
+					:
+					null
+			}
 
 			{
 				addTaskToIndex !== null ?
@@ -319,8 +356,8 @@ export function Home() {
 				activityName: activityName,
 				taskName: taskName,
 				startedAt: '',
+				minutes: 0,
 				emoji: '',
-				efforts: [],
 				id: latestId
 			}
 		)
