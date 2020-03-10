@@ -6,64 +6,48 @@ export function Home() {
 	const { BreakItem } = require('../components/BreakItem')
 	const { AddTaskModal } = require('../components/AddTaskModal')
 
-	const [index, setIndex] = useState(2)
+	const [index, setIndex] = useState(null)
 	const [data, setData] = useState([
-		{
-			type: 'productivity',
-			activityName: 'Monic',
-			taskName: 'Update dashboard',
-			startedAt: '',
-			emoji: '',
-			efforts: []
-		},
-		{
-			type: 'break',
-			startedAt: '',
-			minutes: 0
-		},
-		{
-			type: 'productivity',
-			activityName: 'Monic',
-			taskName: 'Building iOS',
-			startedAt: '',
-			emoji: '',
-			efforts: []
-		},
-		{
-			type: 'break',
-			startedAt: '11:40',
-			minutes: 20
-		},
-		{
-			type: 'productivity',
-			activityName: 'Sewa - Sewa',
-			taskName: 'Membuat layout home',
-			startedAt: '08:30',
-			emoji: '💪',
-			efforts: [
-				{
-					minutes: 90,
-					type: 'productive'
-				},
-				{
-					minutes: 20,
-					type: 'break'
-				},
-				{
-					minutes: 90,
-					type: 'productive'
-				}
-			]
-		}
+		// {
+		// 	type: 'break',
+		// 	startedAt: '11:40',
+		// 	minutes: 20
+		// },
+		// {
+		// 	type: 'productivity',
+		// 	activityName: 'Sewa - Sewa',
+		// 	taskName: 'Membuat layout home',
+		// 	startedAt: '08:30',
+		// 	emoji: '💪',
+		// 	efforts: [
+		// 		{
+		// 			minutes: 90,
+		// 			type: 'productive'
+		// 		},
+		// 		{
+		// 			minutes: 20,
+		// 			type: 'break'
+		// 		},
+		// 		{
+		// 			minutes: 90,
+		// 			type: 'productive'
+		// 		}
+		// 	]
+		// }
 	])
 	const [mode, setMode] = useState('Work')
 	const [addTaskToIndex, setAddTaskToIndex] = useState(null)
 
 	const FADE_OPACITY = 0.2
 
+	let latestId = 0
+
 	return (
 		<div
 			className = 'home-container'
+			style = {{
+				backgroundColor: mode === 'Work' ? 'black' : 'rgb(50,50,50)'
+			}}
 		>
 			<div
 				className = 'home-title-container'
@@ -95,16 +79,37 @@ export function Home() {
 				{
 					mode === 'Edit' ?
 						<div
-							className = 'add-item'
+							className = 'add-item-container'
 						>
-							<a
-								href = '/#'
-								onClick = {() => addTask(0)}
+							<div
+								className = 'add-item'
 							>
-								<p>
-									+ Add Task
-								</p>
-							</a>
+								<a
+									href = '/#'
+									onClick = {() => addTask(0)}
+								>
+									<p>
+										+ Add Task
+									</p>
+								</a>
+							</div>
+
+							<div
+								className = 'add-item-divider'
+							/>
+
+							<div
+								className = 'add-item'
+							>
+								<a
+									href = '/#'
+									onClick = {() => addBreak(0)}
+								>
+									<p>
+										+ Add Break
+									</p>
+								</a>
+							</div>
 						</div>
 						:
 						null
@@ -114,7 +119,7 @@ export function Home() {
 					data.map((dataItem, dataIndex) => {
 						return (
 							<div
-								key = {JSON.stringify(dataItem)}
+								key = {dataItem.id}
 							>
 								{
 									dataIndex !== 0 ?
@@ -123,14 +128,45 @@ export function Home() {
 												<div
 													className = 'item-filler'
 												>
-													<a
-														href = '/#'
-														onClick = {() => addTask(dataIndex)}
+													<div
+														className = 'add-item-filler-container'
 													>
-														<p>
-															+ Add Task
-														</p>
-													</a>
+														<div
+															className = 'add-item'
+															style = {{
+																margin: 0
+															}}
+														>
+															<a
+																href = '/#'
+																onClick = {() => addTask(dataIndex)}
+															>
+																<p>
+																	+ Add Task
+																</p>
+															</a>
+														</div>
+
+														<div
+															className = 'add-item-divider'
+														/>
+
+														<div
+															className = 'add-item'
+															style = {{
+																margin: 0
+															}}
+														>
+															<a
+																href = '/#'
+																onClick = {() => addBreak(dataIndex)}
+															>
+																<p>
+																	+ Add Break
+																</p>
+															</a>
+														</div>
+													</div>
 												</div>
 												:
 												<div
@@ -183,18 +219,39 @@ export function Home() {
 				}
 
 				{
-					mode === 'Edit' && index === data.length - 1 ?
+					mode === 'Edit' && data.length > 0 && index === data.length - 1 ?
 						<div
-							className = 'add-item'
+							className = 'add-item-container'
 						>
-							<a
-								href = '/#'
-								onClick = {() => addTask(data.length)}
+							<div
+								className = 'add-item'
 							>
-								<p>
-									+ Add Task
-								</p>
-							</a>
+								<a
+									href = '/#'
+									onClick = {() => addTask(data.length)}
+								>
+									<p>
+										+ Add Task
+									</p>
+								</a>
+							</div>
+
+							<div
+								className = 'add-item-divider'
+							/>
+
+							<div
+								className = 'add-item'
+							>
+								<a
+									href = '/#'
+									onClick = {() => addBreak(data.length)}
+								>
+									<p>
+										+ Add Break
+									</p>
+								</a>
+							</div>
 						</div>
 						:
 						null
@@ -231,6 +288,26 @@ export function Home() {
 		setAddTaskToIndex(toIndex)
 	}
 
+	async function addBreak(toIndex) {
+		const currentData = JSON.parse(JSON.stringify(data))
+
+		currentData.splice(
+			toIndex,
+			0,
+			{
+				type: 'break',
+				startedAt: '',
+				minutes: 0,
+				id: latestId
+			}
+		)
+
+		latestId++
+
+		await setData(currentData)
+		await setIndex(index == null ? 0 : index + 1)
+	}
+
 	async function applyAddTask(activityName, taskName) {
 		const currentData = JSON.parse(JSON.stringify(data))
 
@@ -243,12 +320,15 @@ export function Home() {
 				taskName: taskName,
 				startedAt: '',
 				emoji: '',
-				efforts: []
+				efforts: [],
+				id: latestId
 			}
 		)
+
+		latestId++
 		
 		await setData(currentData)
 		await setIndex(index == null ? 0 : index + 1)
-		setAddTaskToIndex(null)
+		await setAddTaskToIndex(null)
 	}
 }

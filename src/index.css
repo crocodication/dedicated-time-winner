@@ -35,9 +35,9 @@ a {
 /* -------------------------------------------------------------------- */
 
 .home-container {
-    background-color: black;
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
 }
 
 .home-title-container {
@@ -74,11 +74,16 @@ a {
 
 /* -------------------------------------------------------------------- */
 
+.add-item-container {
+    display: flex;
+}
+
 .add-item {
     color: white;
     border: 5px dashed white;
     border-radius: 20px;
     display: flex;
+    flex: 1;
     height: 110px;
     margin-bottom: 20px;
     margin-top: 20px;
@@ -94,7 +99,13 @@ a {
 .add-item a p {
     color: white;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
-    font-size: 24px;
+    font-size: 20px;
+    min-width: 150px;
+    text-align: center;
+}
+
+.add-item-divider {
+    width: 20px;
 }
 
 /* -------------------------------------------------------------------- */
@@ -104,34 +115,18 @@ a {
 }
 
 .item-filler:hover {
-    color: white;
-    border: 5px dashed white;
-    border-radius: 20px;
-    display: flex;
     height: 110px;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     margin-top: 20px;
 }
 
-.item-filler a {
+.add-item-filler-container {
     display: none;
 }
 
-.item-filler:hover a {
-    align-items: center;
+.item-filler:hover .add-item-filler-container {
     display: flex;
-    flex: 1;
-    justify-content: center;
-}
-
-.item-filler:hover a p {
-    color: white;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    font-size: 24px;
-}
-
-.item-filler-permanent {
-    height: 20px;
+    min-height: 110px;
 }
 
 /* -------------------------------------------------------------------- */
@@ -369,7 +364,7 @@ a {
 }
 
 .add-task-modal-background {
-    background-color: rgba(0,0,0,0.9);
+    background-color: rgba(0,0,0,0.8);
     bottom: 0;
     left: 0;
     position: absolute;
@@ -382,7 +377,7 @@ a {
     border-radius: 20px;
     display: flex;
     flex-direction: column;
-    padding: 30px;
+    padding: 20px;
     width: 300px;
     z-index: 1;
 }
@@ -420,7 +415,7 @@ a {
     color: white;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-weight: bold;
-    margin-top: 40px;
+    margin-top: 20px;
     padding: 20px;
     text-align: center;
     width: 60px;
