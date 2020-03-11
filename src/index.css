@@ -441,7 +441,6 @@ a {
 }
 
 .counter-modal-container {
-    background-color: white;
     border-radius: 7px;
     padding: 20px;
     width: 300px;
@@ -483,6 +482,49 @@ a {
 }
 
 .counter-break-button {
+    align-self: center;
+    border-radius: 7px;
+    border: 2px solid lightgray;
+    color: white;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: bold;
+    margin-top: 20px;
+    padding: 20px;
+    text-align: center;
+    width: 75px;
+}
+
+/* -------------------------------------------------------------------- */
+
+.break-counter-modal-background-container {
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.8);
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+}
+
+.break-counter-modal-container {
+    background-color: darkslateblue;
+    border-radius: 7px;
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    width: 225px;   
+}
+
+.break-counter-modal-title {
+    color: white;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.break-counter-button {
     align-self: center;
     border-radius: 7px;
     border: 2px solid lightgray;

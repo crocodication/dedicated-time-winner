@@ -4,6 +4,7 @@ import ProductivityItem from '../components/ProductivityItem'
 import BreakItem from '../components/BreakItem'
 import AddTaskModal from '../components/AddTaskModal'
 import CounterModal from '../components/CounterModal'
+import BreakCounterModal from '../components/BreakCounterModal'
 
 const FADE_OPACITY = 0.2
 
@@ -21,7 +22,8 @@ export default class extends React.Component {
 		data: [],
 		mode: 'Main',
 		addTaskToIndex: null,
-		isProcessingCount: false
+		isProcessingCount: false,
+		isBreakProcessingCount: false
 	}
 
 	componentDidMount() {
@@ -30,7 +32,7 @@ export default class extends React.Component {
 
 	render() {
 		const { state } = this
-		const { addTaskToIndex, data, index, mode, isProcessingCount } = state
+		const { addTaskToIndex, data, index, mode, isProcessingCount, isBreakProcessingCount } = state
 
 		return (
 			<div
@@ -201,6 +203,7 @@ export default class extends React.Component {
 													item = {dataItem}
 													mode = {mode}
 													onRemove = {() => this.removeItem(dataIndex)}
+													onStart = {() => this.setState({isBreakProcessingCount: true})}
 												/>
 										}
 									</div>
@@ -260,6 +263,15 @@ export default class extends React.Component {
 				}
 
 				{
+					isBreakProcessingCount ?
+						<BreakCounterModal
+							sendBreakProgress = {this.sendBreakProgress}
+						/>
+						:
+						null
+				}
+
+				{
 					addTaskToIndex !== null ?
 						<AddTaskModal
 							onAddTask = {(activityName, taskName) => this.applyAddTask(activityName, taskName)}
@@ -273,6 +285,10 @@ export default class extends React.Component {
 	}
 
 	async loadData() {
+		//FIXME remove later
+		await localStorage.removeItem(KEY_LOCAL_STORAGE_INDEX)
+		await localStorage.removeItem(KEY_LOCAL_STORAGE_DATA)
+
 		let data = await localStorage.getItem(KEY_LOCAL_STORAGE_DATA)
 		let newIndex = await localStorage.getItem(KEY_LOCAL_STORAGE_INDEX)
 
@@ -349,6 +365,31 @@ export default class extends React.Component {
 		})
 
 		this.updateProgresses(newData, index + this.progresses.length - 1)
+	}
+
+	sendBreakProgress = (startedAt, minutes) => {
+		const { state } = this
+		const { data, index } = state
+
+		const newData = JSON.parse(JSON.stringify(data))
+		let newIndex = index - 1 < 0 ? null : index - 1
+
+		newData[index].startedAt = startedAt
+		newData[index].minutes = minutes
+
+		this.setState({
+			isBreakProcessingCount: false,
+			data: newData,
+			index: newIndex
+		})
+
+		if(newIndex !== null) {
+			localStorage.setItem(KEY_LOCAL_STORAGE_INDEX, newIndex)
+		} else {
+			localStorage.removeItem(KEY_LOCAL_STORAGE_INDEX)
+		}
+
+		localStorage.setItem(KEY_LOCAL_STORAGE_DATA, JSON.stringify(newData))
 	}
 	 
 	removeItem(dataIndex) {

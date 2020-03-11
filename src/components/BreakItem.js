@@ -5,7 +5,7 @@ import Emoji from '../components/Emoji'
 export default class extends React.Component {
     render() {
         const { props } = this
-        const { focusAtIndex, index, item, mode, onRemove } = props
+        const { focusAtIndex, index, item, mode, onRemove, onStart } = props
         const { minutes, startedAt } = item
 
         return (
@@ -56,6 +56,7 @@ export default class extends React.Component {
                                     <a
                                         className = 'break-item-start-button'
                                         href = '/#'
+                                        onClick = {onStart}
                                     >
                                         Start
                                     </a>

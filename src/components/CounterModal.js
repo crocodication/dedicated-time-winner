@@ -119,6 +119,10 @@ export default class extends React.Component {
         )
     }
 
+    componentWillUnmount() {
+        this.isCounting = false
+    }
+
     startTickingTheTimer() {
         const secondsGap = Math.floor((moment().toDate() - this.state.startTime.toDate()) / 1000)
     
@@ -189,9 +193,5 @@ export default class extends React.Component {
             seconds: 0,
             startTime: moment()
         })
-    }
-
-    componentWillUnmount() {
-        this.isCounting = false
     }
 }
