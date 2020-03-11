@@ -2,6 +2,8 @@ import React from 'react'
 
 import moment from 'moment'
 
+const KEY_LOCAL_STORAGE_RUNNING_BREAK_PROGRESS = 'v2_running_break_progress'
+
 export default class extends React.Component {
     state = {
         minutes: 0,
@@ -11,7 +13,15 @@ export default class extends React.Component {
 
     isCounting = true
 
-    componentDidMount() {
+    async componentDidMount() {
+        const runningBreakProgress = await localStorage.getItem(KEY_LOCAL_STORAGE_RUNNING_BREAK_PROGRESS)
+
+        if(runningBreakProgress !== null) {
+            this.setState({startTime: moment(runningBreakProgress)})
+        } else {
+            localStorage.setItem(KEY_LOCAL_STORAGE_RUNNING_BREAK_PROGRESS, moment().toString())
+        }
+
         this.startTickingTheTimer()
     }
     
@@ -84,7 +94,9 @@ export default class extends React.Component {
         }
     }
 
-    done() {
+    async done() {
+        await localStorage.removeItem(KEY_LOCAL_STORAGE_RUNNING_BREAK_PROGRESS)
+
         const { props, state } = this
         const { startTime, minutes } = state
 

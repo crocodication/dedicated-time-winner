@@ -2,6 +2,8 @@ import React from 'react'
 
 import moment from 'moment'
 
+const KEY_LOCAL_STORAGE_RUNNING_PROGRESS = 'v2_running_progress'
+
 export default class extends React.Component {
     state = {
         minutes: 0,
@@ -13,7 +15,31 @@ export default class extends React.Component {
 
     isCounting = true
 
-    componentDidMount() {
+    async componentDidMount() {
+        let progresses = await localStorage.getItem(KEY_LOCAL_STORAGE_RUNNING_PROGRESS)
+
+        if(progresses !== null) {
+            progresses = JSON.parse(progresses)
+
+            this.setState({
+                startTime: moment(progresses[progresses.length - 1].startedAt),
+                isBreaking: progresses[progresses.length - 1].type === 'break'
+            })
+            
+            progresses.pop()
+
+            this.setState({progresses})
+        } else {
+            localStorage.setItem(KEY_LOCAL_STORAGE_RUNNING_PROGRESS, JSON.stringify([
+                {
+                    startedAt: this.state.startTime.toString(),
+                    minutes: 0,
+                    emoji: '',
+                    type: 'productivity'
+                }
+            ]))
+        }
+
         this.startTickingTheTimer()
     }
     
@@ -147,7 +173,9 @@ export default class extends React.Component {
         }
     }
 
-    markProgressAs(progressState) {
+    async markProgressAs(progressState) {
+        await localStorage.removeItem(KEY_LOCAL_STORAGE_RUNNING_PROGRESS)
+        
         const { props, state } = this
         const { minutes, progresses, startTime } = state
 
@@ -163,28 +191,45 @@ export default class extends React.Component {
         this.setState({progresses: newProgresses})
     }
 
-    setBreakOrContinue() {
+    async setBreakOrContinue() {
         const { state } = this
         const { isBreaking, minutes, progresses, startTime } = state
 
         const newProgress = {
             startedAt: startTime.format('HH:mm'),
-            minutes,
-            emoji: ''
+            minutes
         }
 
         const newProgresses = JSON.parse(JSON.stringify(progresses))
 
         if(!isBreaking) {
-            this.setState({progresses: newProgresses.concat({
+            await this.setState({progresses: newProgresses.concat({
                 ...newProgress,
+                emoji: '',
                 type: 'productivity'
             })})
+
+            localStorage.setItem(KEY_LOCAL_STORAGE_RUNNING_PROGRESS, JSON.stringify(
+                this.state.progresses.concat({
+                    startedAt: moment().toString(),
+                    minutes: 0,
+                    type: 'break'
+                })
+            ))
         } else {
-            this.setState({progresses: newProgresses.concat({
+            await this.setState({progresses: newProgresses.concat({
                 ...newProgress,
                 type: 'break'
             })})
+
+            localStorage.setItem(KEY_LOCAL_STORAGE_RUNNING_PROGRESS, JSON.stringify(
+                this.state.progresses.concat({
+                    startedAt: moment().toString(),
+                    minutes: 0,
+                    emoji: '',
+                    type: 'productivity'
+                })
+            ))
         }
 
         this.setState({

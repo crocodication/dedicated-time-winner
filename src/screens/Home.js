@@ -9,7 +9,9 @@ import BreakCounterModal from '../components/BreakCounterModal'
 const FADE_OPACITY = 0.2
 
 const KEY_LOCAL_STORAGE_DATA = 'v2_data'
-const KEY_LOCAL_STORAGE_INDEX = null
+const KEY_LOCAL_STORAGE_INDEX = 'v2_index'
+const KEY_LOCAL_STORAGE_RUNNING_PROGRESS = 'v2_running_progress'
+const KEY_LOCAL_STORAGE_RUNNING_BREAK_PROGRESS = 'v2_running_break_progress'
 
 export default class extends React.Component {
 	latestId = 0
@@ -285,10 +287,17 @@ export default class extends React.Component {
 	}
 
 	async loadData() {
+		// localStorage.removeItem(KEY_LOCAL_STORAGE_DATA)
+		// localStorage.removeItem(KEY_LOCAL_STORAGE_INDEX)
+		// localStorage.removeItem(KEY_LOCAL_STORAGE_RUNNING_PROGRESS)
+		// localStorage.removeItem(KEY_LOCAL_STORAGE_RUNNING_BREAK_PROGRESS)
+
 		let data = await localStorage.getItem(KEY_LOCAL_STORAGE_DATA)
 		let newIndex = await localStorage.getItem(KEY_LOCAL_STORAGE_INDEX)
+		let runningProgress = await localStorage.getItem(KEY_LOCAL_STORAGE_RUNNING_PROGRESS)
+		let runningBreakProgress = await localStorage.getItem(KEY_LOCAL_STORAGE_RUNNING_BREAK_PROGRESS)
 
-		if(data) {
+		if(data !== null) {
 			data = JSON.parse(data)
 
 			for(const item of data) {
@@ -303,6 +312,16 @@ export default class extends React.Component {
 		if(newIndex !== null) {
 			this.setState({index: Number(newIndex)})
 		}
+
+		if(runningProgress !== null) {
+			this.setState({isProcessingCount: true})
+		}
+
+		if(runningBreakProgress !== null) {
+			this.setState({isBreakProcessingCount: true})
+		}
+
+		navigator.clipboard.writeText(JSON.stringify(data, null, 4))
 	}
 
 	sendProgresses = newProgresses => {
@@ -323,6 +342,8 @@ export default class extends React.Component {
 
 			if(Number(progressIndex) !== 0) {
 				const progressType = thisProgress.type
+
+				this.latestId++
 
 				if(progressType === 'productivity') {
 					newData.splice(
@@ -350,8 +371,6 @@ export default class extends React.Component {
 						}
 					)
 				}
-
-				this.latestId++
 			}
 		}
 
@@ -426,6 +445,8 @@ export default class extends React.Component {
 		
 		const newData = JSON.parse(JSON.stringify(data))
 
+		this.latestId++
+
 		newData.splice(
 			toIndex,
 			0,
@@ -436,8 +457,6 @@ export default class extends React.Component {
 				id: this.latestId
 			}
 		)
-
-		this.latestId++
 
 		let newIndex = index == null ? 0 : index + 1
 
@@ -461,6 +480,8 @@ export default class extends React.Component {
 
 		const newData = JSON.parse(JSON.stringify(data))
 
+		this.latestId++
+
 		newData.splice(
 			addTaskToIndex,
 			0,
@@ -474,8 +495,6 @@ export default class extends React.Component {
 				id: this.latestId
 			}
 		)
-
-		this.latestId++
 
 		let newIndex = index == null ? 0 : index + 1
 		
@@ -514,8 +533,6 @@ export default class extends React.Component {
 				newData[currentIndex].startedAt = thisProgress.startedAt
 				newData[currentIndex].minutes = thisProgress.minutes
 			}
-
-			this.latestId++
 		}
 
 		--currentIndex
