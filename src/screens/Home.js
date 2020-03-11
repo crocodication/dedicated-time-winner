@@ -285,10 +285,6 @@ export default class extends React.Component {
 	}
 
 	async loadData() {
-		//FIXME remove later
-		await localStorage.removeItem(KEY_LOCAL_STORAGE_INDEX)
-		await localStorage.removeItem(KEY_LOCAL_STORAGE_DATA)
-
 		let data = await localStorage.getItem(KEY_LOCAL_STORAGE_DATA)
 		let newIndex = await localStorage.getItem(KEY_LOCAL_STORAGE_INDEX)
 
