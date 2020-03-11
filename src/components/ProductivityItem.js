@@ -10,7 +10,7 @@ export default class extends React.Component {
 
         return (
             <div
-                className = {'productivity-item-container-' + mode.toLowerCase() + '-mode'}
+                className = {mode === 'View Edit' ? 'productivity-item-container-edit-mode' : 'productivity-item-container-main-mode'}
                 style = {{
                     backgroundColor: focusAtIndex === index ? 'mediumseagreen' : 'white'
                 }}
@@ -69,7 +69,7 @@ export default class extends React.Component {
                                 className = 'productivity-item-options-container'
                             >
                                 {
-                                    mode === 'Work' && focusAtIndex === index ?
+                                    mode === 'Main' && focusAtIndex === index ?
                                         <a
                                             className = 'productivity-item-start-button'
                                             href = '/#'
@@ -82,7 +82,7 @@ export default class extends React.Component {
                                 }
 
                                 {
-                                    mode === 'Edit' ?
+                                    mode === 'View Edit' ?
                                         <a
                                             className = 'productivity-item-remove-button'
                                             href = '/#'

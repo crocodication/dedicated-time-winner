@@ -10,7 +10,7 @@ export default class extends React.Component {
 
         return (
             <div
-                className = {'break-item-container-' + mode.toLowerCase() + '-mode'}
+                className = {mode === 'View Edit' ? 'break-item-container-edit-mode' : 'break-item-container-main-mode'}
                 style = {{
                     backgroundColor: focusAtIndex === index ? 'darkslateblue' : 'gray'
                 }}
@@ -52,7 +52,7 @@ export default class extends React.Component {
                             className = 'break-item-options-container'
                         >
                             {
-                                mode === 'Work' && focusAtIndex === index ?
+                                mode === 'Main' && focusAtIndex === index ?
                                     <a
                                         className = 'break-item-start-button'
                                         href = '/#'
@@ -64,7 +64,7 @@ export default class extends React.Component {
                             }
 
                             {
-                                mode === 'Edit' ?
+                                mode === 'View Edit' ?
                                     <a
                                         className = 'break-item-remove-button'
                                         href = '/#'

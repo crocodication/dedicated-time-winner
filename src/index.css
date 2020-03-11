@@ -135,7 +135,7 @@ a {
 
 /* -------------------------------------------------------------------- */
 
-.productivity-item-container-work-mode {
+.productivity-item-container-main-mode {
     border-radius: 20px;
     padding: 20px;
     -webkit-user-select: none;  
@@ -275,7 +275,7 @@ a {
 
 /* -------------------------------------------------------------------- */
 
-.break-item-container-work-mode {
+.break-item-container-main-mode {
     align-items: center;
     border-radius: 20px;
     display: flex;

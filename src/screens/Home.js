@@ -7,6 +7,9 @@ import CounterModal from '../components/CounterModal'
 
 const FADE_OPACITY = 0.2
 
+const KEY_LOCAL_STORAGE_DATA = 'v2_data'
+const KEY_LOCAL_STORAGE_INDEX = null
+
 export default class extends React.Component {
 	latestId = 0
 	progresses = []
@@ -16,9 +19,13 @@ export default class extends React.Component {
 	state = {
 		index: null,
 		data: [],
-		mode: 'Work',
+		mode: 'Main',
 		addTaskToIndex: null,
 		isProcessingCount: false
+	}
+
+	componentDidMount() {
+		this.loadData()
 	}
 
 	render() {
@@ -29,7 +36,7 @@ export default class extends React.Component {
 			<div
 				className = 'home-container'
 				style = {{
-					backgroundColor: mode === 'Work' ? 'black' : 'rgb(50,50,50)'
+					backgroundColor: mode === 'Main' ? 'black' : 'rgb(50,50,50)'
 				}}
 			>
 				<div
@@ -38,7 +45,7 @@ export default class extends React.Component {
 					<h1
 						style = {{
 							color: 'white',
-							opacity: mode === 'Work' && index !== null ? FADE_OPACITY : 1
+							opacity: mode === 'Main' && index !== null ? FADE_OPACITY : 1
 						}}
 					>
 						Productivity Planner
@@ -48,19 +55,19 @@ export default class extends React.Component {
 				<a
 					className = 'mode-button'
 					href = '/#'
-					onClick = {() => this.setState({mode: mode === 'Edit' ? 'Work' : 'Edit'})}
+					onClick = {() => this.setState({mode: mode === 'View Edit' ? 'Main' : 'View Edit'})}
 					style = {{
-						opacity: mode === 'Work'  && index !== null ? FADE_OPACITY : 1
+						opacity: mode === 'Main'  && index !== null ? FADE_OPACITY : 1
 					}}
 				>
-					{mode} Mode
+					{mode} Area
 				</a>
 
 				<div
 					className = 'home-content-container'
 				>
 					{
-						mode === 'Edit' ?
+						mode === 'View Edit' ?
 							<div
 								className = 'add-item-container'
 							>
@@ -107,7 +114,7 @@ export default class extends React.Component {
 									{
 										dataIndex !== 0 ?
 											(
-												mode === 'Edit' && index != null && dataIndex <= index + 1 ?	
+												mode === 'View Edit' && index != null && dataIndex <= index + 1 ?	
 													<div
 														className = 'item-filler'
 													>
@@ -164,13 +171,13 @@ export default class extends React.Component {
 										style = {{
 											opacity: (
 												(
-													mode === 'Work' &&
+													mode === 'Main' &&
 													index !== null &&
 													index !== dataIndex
 												)
 												||
 												(
-													mode === 'Edit' &&
+													mode === 'View Edit' &&
 													index !== null &&
 													index < dataIndex
 												)
@@ -203,7 +210,7 @@ export default class extends React.Component {
 					}
 
 					{
-						mode === 'Edit' && data.length > 0 && index === data.length - 1 ?
+						mode === 'View Edit' && data.length > 0 && index === data.length - 1 ?
 							<div
 								className = 'add-item-container'
 							>
@@ -263,6 +270,27 @@ export default class extends React.Component {
 				}
 			</div>
 		)
+	}
+
+	async loadData() {
+		let data = await localStorage.getItem(KEY_LOCAL_STORAGE_DATA)
+		let newIndex = await localStorage.getItem(KEY_LOCAL_STORAGE_INDEX)
+
+		if(data) {
+			data = JSON.parse(data)
+
+			for(const item of data) {
+				if(this.latestId < item.id) {
+					this.latestId = item.id + 1
+				}
+			}
+
+			this.setState({data})
+		}
+
+		if(newIndex !== null) {
+			this.setState({index: Number(newIndex)})
+		}
 	}
 
 	sendProgresses = newProgresses => {
@@ -335,10 +363,20 @@ export default class extends React.Component {
 			}
 		}
 
+		let newIndex = dataIndex > index ? index : (index > 0 ? index - 1 : null)
+
 		this.setState({
 			data: newData,
-			index: dataIndex > index ? index : (index > 0 ? index - 1 : null)
+			index: newIndex
 		})
+
+		if(newIndex !== null) {
+			localStorage.setItem(KEY_LOCAL_STORAGE_INDEX, newIndex)
+		} else {
+			localStorage.removeItem(KEY_LOCAL_STORAGE_INDEX)
+		}
+
+		localStorage.setItem(KEY_LOCAL_STORAGE_DATA, JSON.stringify(newData))
 	}
 	 
 	addTask(toIndex) {
@@ -349,9 +387,9 @@ export default class extends React.Component {
 		const { state } = this
 		const { data, index } = state
 		
-		const currentData = JSON.parse(JSON.stringify(data))
+		const newData = JSON.parse(JSON.stringify(data))
 
-		currentData.splice(
+		newData.splice(
 			toIndex,
 			0,
 			{
@@ -364,19 +402,29 @@ export default class extends React.Component {
 
 		this.latestId++
 
+		let newIndex = index == null ? 0 : index + 1
+
 		this.setState({
-			data: currentData,
-			index: index == null ? 0 : index + 1
+			data: newData,
+			index: newIndex
 		})
+
+		if(newIndex !== null) {
+			localStorage.setItem(KEY_LOCAL_STORAGE_INDEX, newIndex)
+		} else {
+			localStorage.removeItem(KEY_LOCAL_STORAGE_INDEX)
+		}
+
+		localStorage.setItem(KEY_LOCAL_STORAGE_DATA, JSON.stringify(newData))
 	}
 
 	async applyAddTask(activityName, taskName) {
 		const { state } = this
 		const { addTaskToIndex, data, index } = state
 
-		const currentData = JSON.parse(JSON.stringify(data))
+		const newData = JSON.parse(JSON.stringify(data))
 
-		currentData.splice(
+		newData.splice(
 			addTaskToIndex,
 			0,
 			{
@@ -391,12 +439,22 @@ export default class extends React.Component {
 		)
 
 		this.latestId++
+
+		let newIndex = index == null ? 0 : index + 1
 		
 		this.setState({
-			data: currentData,
-			index: index == null ? 0 : index + 1,
+			data: newData,
+			index: newIndex,
 			addTaskToIndex: null
 		})
+
+		if(newIndex !== null) {
+			localStorage.setItem(KEY_LOCAL_STORAGE_INDEX, newIndex)
+		} else {
+			localStorage.removeItem(KEY_LOCAL_STORAGE_INDEX)
+		}
+
+		localStorage.setItem(KEY_LOCAL_STORAGE_DATA, JSON.stringify(newData))
 	}
 	 
 	updateProgresses(newData, latestIndex, progressIndex = 0) {
@@ -438,6 +496,14 @@ export default class extends React.Component {
 			setTimeout(() => {
 				this.updateProgresses(newData, currentIndex, Number(progressIndex) + 1)
 			}, 150)
+		} else {
+			if(currentIndex) {
+				localStorage.setItem(KEY_LOCAL_STORAGE_INDEX, currentIndex)
+			} else {
+				localStorage.removeItem(KEY_LOCAL_STORAGE_INDEX)
+			}
+
+			localStorage.setItem(KEY_LOCAL_STORAGE_DATA, JSON.stringify(newData))
 		}
 	}
 }
