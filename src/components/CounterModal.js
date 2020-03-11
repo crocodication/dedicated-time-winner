@@ -1,139 +1,141 @@
-const moment = require('moment')
+import React from 'react'
 
-export function CounterModal(props) {
-    const React = require('react')
-    const { useEffect, useState } = React
+import moment from 'moment'
 
-    const [minutes, setMinutes] = useState(0)
-    const [seconds, setSeconds] = useState(0)
-    const [isBreaking, setIsBreaking] = useState(false)
-    const [startTime, setStartTime] = useState(moment())
+export default class extends React.Component {
+    state = {
+        minutes: 0,
+        seconds: 0,
+        isBreaking: false,
+        startTime: moment(),
+        progresses: []
+    }
 
-    const { currentTask, sendProgresses } = props
+    isCounting = true
 
-    const [progresses, setProgresses] = useState([])
+    componentDidMount() {
+        this.startTickingTheTimer()
+    }
+    
+    render() {
+        const { props, state } = this
+        const { currentTask } = props
+        const { minutes, seconds, isBreaking } = state
 
-    useEffect(() => {
-        let isCounting = true
-
-        function startTickingTheTimer() {
-            const secondsGap = Math.floor((moment().toDate() - startTime.toDate()) / 1000)
-        
-            const seconds = secondsGap % 60
-            const minutes = (secondsGap - seconds) / 60
-
-            setMinutes(minutes)
-            setSeconds(seconds)
-
-            if(isCounting) {
-                setTimeout(() => startTickingTheTimer(), 100)
-            }
-        }
-
-        startTickingTheTimer()
-
-        return () => {
-            isCounting = false
-        }
-    }, [startTime, progresses])
-
-    return (
-        <div
-            className = 'counter-modal-background-container'
-        >
+        return (
             <div
-                className = 'counter-modal-container'
-                style = {{
-                    backgroundColor: isBreaking ? 'darkslateblue' : 'white'
-                }}
+                className = 'counter-modal-background-container'
             >
-                <h3
-                    className = 'counter-modal-title'
-                    style = {{
-                        color: isBreaking ? 'white' : 'gray'
-                    }}
-                >
-                    {isBreaking ? 'Breaking...' : "Let's go, get them!"}
-                </h3>
-
-                <h2
-                    className = 'counter-modal-task-name'
-                >
-                    {currentTask}
-                </h2>
-
-                <p
-                    className = 'counter'
-                    style = {{
-                        color: isBreaking ? 'white' : 'gray'
-                    }}
-                >
-                    {toTickNumber(minutes)}:{toTickNumber(seconds)}
-                </p>
-
                 <div
-                    className = 'counter-choice-buttons-container'
+                    className = 'counter-modal-container'
+                    style = {{
+                        backgroundColor: isBreaking ? 'darkslateblue' : 'white'
+                    }}
                 >
-                    {
-                        [
-                            {
-                                value: '💩 Not achieved at all',
-                                minimumMinutes: 0
-                            },
-                            {
-                                value: '🐌 Just making a progress',
-                                minimumMinutes: 3
-                            },
-                            {
-                                value: '🎯 Achieved',
-                                minimumMinutes: 3
-                            },
-                            {
-                                value: '💪🏻 More than achieved, bro!',
-                                minimumMinutes: 3
-                            }
-                        ].map(item => {
-                            if(minutes >= item.minimumMinutes && !isBreaking) {
-                                return (
-                                    <a
-                                        className = 'counter-choice-button'
-                                        href = '/#'
-                                        onClick = {() => markProgressAs(item)}
-                                    >
-                                        {item.value}
-                                    </a>
-                                )
-                            } else {
-                                return (
-                                    <div
-                                        className = 'counter-choice-button'
-                                        style = {{
-                                            opacity: 0.3
-                                        }}
-                                    >
-                                        {item.value}
-                                    </div>
-                                )
-                            }
-                        })
-                    }
-
-                    <a
-                        className = 'counter-break-button'
-                        href = '/#'
-                        onClick = {() => setBreakOrContinue()}
+                    <h3
+                        className = 'counter-modal-title'
                         style = {{
-                            backgroundColor: isBreaking ? 'mediumseagreen' : 'crimson'
+                            color: isBreaking ? 'white' : 'gray'
                         }}
                     >
-                        {isBreaking ? 'Continue' : 'Break'}
-                    </a>
+                        {isBreaking ? 'Breaking...' : "Let's go, get them!"}
+                    </h3>
+
+                    <h2
+                        className = 'counter-modal-task-name'
+                    >
+                        {currentTask}
+                    </h2>
+
+                    <p
+                        className = 'counter'
+                        style = {{
+                            color: isBreaking ? 'white' : 'gray'
+                        }}
+                    >
+                        {this.toTickNumber(minutes)}:{this.toTickNumber(seconds)}
+                    </p>
+
+                    <div
+                        className = 'counter-choice-buttons-container'
+                    >
+                        {
+                            [
+                                {
+                                    value: '💩 Not achieved at all',
+                                    minimumMinutes: 0
+                                },
+                                {
+                                    value: '🐌 Just making a progress',
+                                    minimumMinutes: 3
+                                },
+                                {
+                                    value: '🎯 Achieved',
+                                    minimumMinutes: 3
+                                },
+                                {
+                                    value: '💪🏻 More than achieved, bro!',
+                                    minimumMinutes: 3
+                                }
+                            ].map(item => {
+                                if(minutes >= item.minimumMinutes && !isBreaking) {
+                                    return (
+                                        <a
+                                            className = 'counter-choice-button'
+                                            href = '/#'
+                                            onClick = {() => this.markProgressAs(item)}
+                                        >
+                                            {item.value}
+                                        </a>
+                                    )
+                                } else {
+                                    return (
+                                        <div
+                                            className = 'counter-choice-button'
+                                            style = {{
+                                                opacity: 0.3
+                                            }}
+                                        >
+                                            {item.value}
+                                        </div>
+                                    )
+                                }
+                            })
+                        }
+
+                        <a
+                            className = 'counter-break-button'
+                            href = '/#'
+                            onClick = {() => this.setBreakOrContinue()}
+                            style = {{
+                                backgroundColor: isBreaking ? 'mediumseagreen' : 'crimson'
+                            }}
+                        >
+                            {isBreaking ? 'Continue' : 'Break'}
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
-    )
+        )
+    }
 
-    function toTickNumber(number) {
+    startTickingTheTimer() {
+        const secondsGap = Math.floor((moment().toDate() - this.state.startTime.toDate()) / 1000)
+    
+        const seconds = secondsGap % 60
+        const minutes = (secondsGap - seconds) / 60
+
+        this.setState({
+            minutes,
+            seconds
+        })
+
+        if(this.isCounting) {
+            setTimeout(() => this.startTickingTheTimer(), 100)
+        }
+    }
+
+    toTickNumber(number) {
         if(number < 10) {
             return '0' + number.toString()
         } else {
@@ -141,7 +143,10 @@ export function CounterModal(props) {
         }
     }
 
-    function markProgressAs(progressState) {
+    markProgressAs(progressState) {
+        const { props, state } = this
+        const { minutes, progresses, startTime } = state
+
         const newProgresses = JSON.parse(JSON.stringify(progresses)).concat({
             startedAt: startTime.format('HH:mm'),
             minutes,
@@ -149,11 +154,15 @@ export function CounterModal(props) {
             type: 'productivity'
         })
 
-        sendProgresses(newProgresses)
-        setProgresses(newProgresses)
+        props.sendProgresses(newProgresses)
+
+        this.setState({progresses: newProgresses})
     }
 
-    function setBreakOrContinue() {
+    setBreakOrContinue() {
+        const { state } = this
+        const { isBreaking, minutes, progresses, startTime } = state
+
         const newProgress = {
             startedAt: startTime.format('HH:mm'),
             minutes,
@@ -163,20 +172,26 @@ export function CounterModal(props) {
         const newProgresses = JSON.parse(JSON.stringify(progresses))
 
         if(!isBreaking) {
-            setProgresses(newProgresses.concat({
+            this.setState({progresses: newProgresses.concat({
                 ...newProgress,
                 type: 'productivity'
-            }))
+            })})
         } else {
-            setProgresses(newProgresses.concat({
+            this.setState({progresses: newProgresses.concat({
                 ...newProgress,
                 type: 'break'
-            }))
+            })})
         }
 
-        setMinutes(0)
-        setSeconds(0)
-        setIsBreaking(!isBreaking)
-        setStartTime(moment())
+        this.setState({
+            isBreaking: !isBreaking,
+            minutes: 0,
+            seconds: 0,
+            startTime: moment()
+        })
+    }
+
+    componentWillUnmount() {
+        this.isCounting = false
     }
 }

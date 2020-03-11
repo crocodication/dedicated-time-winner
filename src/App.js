@@ -1,9 +1,11 @@
-export function App() {
-    const React = require('react')
+import React from 'react'
 
-    const { Home } = require('./screens/Home')
+import Home from './screens/Home'
 
-    return (
-        <Home />
-    )
+export default class extends React.Component {
+    render() {
+        return (
+            <Home />
+        )
+    }
 }

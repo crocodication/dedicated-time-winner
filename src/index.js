@@ -1,13 +1,13 @@
-const React = require('react')
-const ReactDOM = require('react-dom')
+import React from 'react'
+import ReactDOM from 'react-dom'
 
-const { BrowserRouter } = require('react-router-dom')
+import { BrowserRouter } from 'react-router-dom'
 
-const { register } = require('./serviceWorker')
+import { register } from './serviceWorker'
 
-const { App } = require('./App')
+import App from './App'
 
-require('./index.css')
+import './index.css'
 
 ReactDOM.render(
     (

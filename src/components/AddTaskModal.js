@@ -1,108 +1,113 @@
-export function AddTaskModal(props) {
-    const React = require('react')
-    const { useEffect, useState } = React
+import React from 'react'
 
-    const [activityName, setActivityName] = useState('')
-    const [taskName, setTaskName] = useState('')
+export default class extends React.Component {
+    state = {
+        activityName: '',
+        taskName: ''
+    }
 
-    const handleActivityNameChange = (event) => setActivityName(event.target.value)
-    const handleTaskNameChange = (event) => setTaskName(event.target.value)
+    handleActivityNameChange = (event) => this.setState({activityName: event.target.value})
+    handleTaskNameChange = (event) => this.setState({taskName: event.target.value})
 
-    const { onDismiss, onAddTask } = props
+    componentDidMount() {
+        window.addEventListener('keydown', this.onKeyDown)
+    }
 
-    useEffect(() => {
-        const onKeyDown = (event) => {
-            if(event.keyCode === 27) {
-                setTimeout(onDismiss, 100)
-            }
-        }
+    render() {
+        const { props, state } = this
+        const { onDismiss, onAddTask } = props
+        const { activityName, taskName } = state
 
-        window.addEventListener('keydown', onKeyDown)
+        const isFormComplete = activityName.trim() !== '' && taskName.trim() !== ''
 
-        return () => {
-            window.removeEventListener('keydown', onKeyDown)
-        }
-    }, [onDismiss])
-
-    const isFormComplete = activityName.trim() !== '' && taskName.trim() !== ''
-
-    return (
-        <div
-            className = 'add-task-modal-main-container'
-        >
+        return (
             <div
-                className = 'add-task-modal-background'
-                onClick = {onDismiss}
-            />
-
-            <div
-                className = 'add-task-modal-container'
+                className = 'add-task-modal-main-container'
             >
                 <div
-                    className = 'add-task-modal-top-content-container'
+                    className = 'add-task-modal-background'
+                    onClick = {onDismiss}
+                />
+
+                <div
+                    className = 'add-task-modal-container'
                 >
-                    <h2
-                        className = 'add-task-modal-title'
+                    <div
+                        className = 'add-task-modal-top-content-container'
                     >
-                        Add Task
-                    </h2>
-
-                    <a
-                        href = '/#'
-                        onClick = {onDismiss}
-                    >
-                        <p
-                            className = 'add-task-modal-close-button'
+                        <h2
+                            className = 'add-task-modal-title'
                         >
-                            X
-                        </p>
-                    </a>
-                </div>
+                            Add Task
+                        </h2>
 
-                <input
-                    autoFocus
-                    className = "add-task-modal-input"
-                    id = "activity-name"
-                    name = "activity-name"
-                    onChange = {handleActivityNameChange}
-                    placeholder = 'Input activity name...'
-                    type = "text"
-                    value = {activityName}
-                />
-
-                <input
-                    className = "add-task-modal-input"
-                    id = "task-name"
-                    name = "task-name"
-                    onChange = {handleTaskNameChange}
-                    placeholder = 'Input task name...'
-                    type = "text"
-                    value = {taskName}
-                />
-
-                {
-                    !isFormComplete ?
-                        <div
-                            className = 'add-task-modal-add-button'
-                            style = {{
-                                backgroundColor: 'dimgray'
-                            }}
-                        >
-                            Add
-                        </div>
-                        :
                         <a
-                            className = 'add-task-modal-add-button'
                             href = '/#'
-                            onClick = {() => onAddTask(activityName, taskName)}
-                            style = {{
-                                backgroundColor: 'mediumseagreen'
-                            }}
+                            onClick = {onDismiss}
                         >
-                            Add
+                            <p
+                                className = 'add-task-modal-close-button'
+                            >
+                                X
+                            </p>
                         </a>
-                }
+                    </div>
+
+                    <input
+                        autoFocus
+                        className = "add-task-modal-input"
+                        id = "activity-name"
+                        name = "activity-name"
+                        onChange = {this.handleActivityNameChange}
+                        placeholder = 'Input activity name...'
+                        type = "text"
+                        value = {activityName}
+                    />
+
+                    <input
+                        className = "add-task-modal-input"
+                        id = "task-name"
+                        name = "task-name"
+                        onChange = {this.handleTaskNameChange}
+                        placeholder = 'Input task name...'
+                        type = "text"
+                        value = {taskName}
+                    />
+
+                    {
+                        !isFormComplete ?
+                            <div
+                                className = 'add-task-modal-add-button'
+                                style = {{
+                                    backgroundColor: 'dimgray'
+                                }}
+                            >
+                                Add
+                            </div>
+                            :
+                            <a
+                                className = 'add-task-modal-add-button'
+                                href = '/#'
+                                onClick = {() => onAddTask(activityName, taskName)}
+                                style = {{
+                                    backgroundColor: 'mediumseagreen'
+                                }}
+                            >
+                                Add
+                            </a>
+                    }
+                </div>
             </div>
-        </div>
-    )
+        )
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('keydown', this.onKeyDown)
+    }
+
+    onKeyDown = (event) => {
+        if(event.keyCode === 27) {
+            setTimeout(this.props.onDismiss, 100)
+        }
+    }
 }

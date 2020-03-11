@@ -1,16 +1,19 @@
-export function Emoji(props) {
-    const React = require('react')
+import React from 'react'
 
-    const { label, symbol } = props
+export default class Emoji extends React.Component {
+    render() {
+        const { props } = this
+        const { label, symbol } = props
 
-    return (
-        <span
-            aria-hidden = {label ? 'false' : 'true'}
-            aria-label = {label ? label : ''}
-            className = 'emoji'
-            role = 'img'
-        >
-            {symbol}
-        </span>
-    )
+        return (
+            <span
+                aria-hidden = {label ? 'false' : 'true'}
+                aria-label = {label ? label : ''}
+                className = 'emoji'
+                role = 'img'
+            >
+                {symbol}
+            </span>
+        )
+    }
 }
