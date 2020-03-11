@@ -1,4 +1,7 @@
 let latestId = 0
+let progresses = []
+let activityName = ''
+let taskName = ''
 
 export function Home() {
 	const React = require('react')
@@ -16,6 +19,59 @@ export function Home() {
 	const [isProcessingCount, setIsProcessingCount] = useState(false)
 
 	const FADE_OPACITY = 0.2
+
+	const sendProgresses = newProgresses => {
+		setIsProcessingCount(false)
+
+		const newData = JSON.parse(JSON.stringify(data))
+
+		activityName = newData[index].activityName
+		taskName = newData[index].taskName
+
+		progresses = newProgresses
+
+		for(const progressIndex in progresses) {
+			const thisProgress = progresses[progressIndex]
+
+			if(Number(progressIndex) !== 0) {
+				const progressType = thisProgress.type
+
+				if(progressType === 'productivity') {
+					newData.splice(
+						index,
+						0,
+						{
+							type: 'productivity',
+							activityName: activityName,
+							taskName: taskName,
+							startedAt: '',
+							minutes: 0,
+							emoji: '',
+							id: latestId
+						}
+					)
+				} else if(progressType === 'break') {
+					newData.splice(
+						index,
+						0,
+						{
+							type: 'break',
+							startedAt: '',
+							minutes: 0,
+							id: latestId
+						}
+					)
+				}
+
+				latestId++
+			}
+		}
+
+		setIndex(index + progresses.length - 1)
+		setData(newData)
+
+		updateProgresses(newData, index + progresses.length - 1)
+	}
 
 	return (
 		<div
@@ -238,58 +294,7 @@ export function Home() {
 				isProcessingCount ?
 					<CounterModal
 						currentTask = {data[index].taskName}
-						sendProgresses = {async(progresses) => {
-							const newData = JSON.parse(JSON.stringify(data))
-
-							const activityName = newData[index].activityName
-							const taskName = newData[index].taskName
-
-							for(const progressIndex in progresses) {
-								const thisProgress = progresses[progressIndex]
-
-								if(Number(progressIndex) === 0) {
-									newData[index].startedAt = thisProgress.startedAt
-									newData[index].minutes = thisProgress.minutes
-									newData[index].emoji = thisProgress.emoji
-								} else {
-									const progressType = thisProgress.type
-
-									if(progressType === 'productivity') {
-										newData.splice(
-											index,
-											0,
-											{
-												type: 'productivity',
-												activityName: activityName,
-												taskName: taskName,
-												startedAt: thisProgress.startedAt,
-												minutes: thisProgress.minutes,
-												emoji: thisProgress.emoji,
-												id: latestId
-											}
-										)
-									} else if(progressType === 'break') {
-										newData.splice(
-											index,
-											0,
-											{
-												type: 'break',
-												startedAt: thisProgress.startedAt,
-												minutes: thisProgress.minutes,
-												id: latestId
-											}
-										)
-									}
-
-									latestId++
-								}
-							}
-
-							setData(newData)
-							setIndex(index === 0 ? null : (index - 1))
-							setIsProcessingCount(false)
-						}}
-						spendMinutes = {5}
+						sendProgresses = {sendProgresses}
 					/>
 					:
 					null
@@ -367,5 +372,43 @@ export function Home() {
 		await setData(currentData)
 		await setIndex(index == null ? 0 : index + 1)
 		await setAddTaskToIndex(null)
+	}
+	 
+	function updateProgresses(newData, latestIndex) {
+		let currentIndex = latestIndex
+
+		for(const progressIndex in progresses) {
+			setTimeout(() => {
+				const thisProgress = progresses[progressIndex]
+
+				if(Number(progressIndex) === 0) {
+					newData[currentIndex].startedAt = thisProgress.startedAt
+					newData[currentIndex].minutes = thisProgress.minutes
+					newData[currentIndex].emoji = thisProgress.emoji
+				} else {
+					const progressType = thisProgress.type
+
+					if(progressType === 'productivity') {
+						newData[currentIndex].startedAt = thisProgress.startedAt
+						newData[currentIndex].minutes = thisProgress.minutes
+						newData[currentIndex].emoji = thisProgress.emoji
+					} else if(progressType === 'break') {
+						newData[currentIndex].startedAt = thisProgress.startedAt
+						newData[currentIndex].minutes = thisProgress.minutes
+					}
+
+					latestId++
+				}
+
+				--currentIndex
+
+				if(currentIndex < 0) {
+					currentIndex = null
+				}
+
+				setData(newData)
+				setIndex(currentIndex)
+			}, (Number(progressIndex) + 1) * 150)
+		}
 	}
 }
