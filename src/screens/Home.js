@@ -56,16 +56,36 @@ export default class extends React.Component {
 					</h1>
 				</div>
 
-				<a
-					className = 'mode-button'
-					href = '/#'
-					onClick = {() => this.setState({mode: mode === 'View Edit' ? 'Main' : 'View Edit'})}
-					style = {{
-						opacity: mode === 'Main'  && index !== null ? FADE_OPACITY : 1
-					}}
+				<div
+					className = 'top-buttons-container'
 				>
-					{mode} Area
-				</a>
+					{
+						mode === 'View Edit' ?
+							<a
+								className = 'top-button'
+								href = '/#'
+								onClick = {() => this.seeMyPerformance()}
+								style = {{
+									opacity: mode === 'Main'  && index !== null ? FADE_OPACITY : 1
+								}}
+							>
+								See my performance
+							</a>
+							:
+							null
+					}
+
+					<a
+						className = 'top-button'
+						href = '/#'
+						onClick = {() => this.setState({mode: mode === 'View Edit' ? 'Main' : 'View Edit'})}
+						style = {{
+							opacity: mode === 'Main'  && index !== null ? FADE_OPACITY : 1
+						}}
+					>
+						{mode === 'View Edit' ? 'Back to Main Area' : 'Go to View-Edit Area'}
+					</a>
+				</div>
 
 				<div
 					className = 'home-content-container'
@@ -74,6 +94,9 @@ export default class extends React.Component {
 						mode === 'View Edit' ?
 							<div
 								className = 'add-item-container'
+								style = {{
+									marginBottom: 30
+								}}
 							>
 								<div
 									className = 'add-item'
@@ -218,6 +241,9 @@ export default class extends React.Component {
 						mode === 'View Edit' && data.length > 0 && index === data.length - 1 ?
 							<div
 								className = 'add-item-container'
+								style = {{
+									marginTop: 30
+								}}
 							>
 								<div
 									className = 'add-item'
@@ -320,8 +346,6 @@ export default class extends React.Component {
 		if(runningBreakProgress !== null) {
 			this.setState({isBreakProcessingCount: true})
 		}
-
-		navigator.clipboard.writeText(JSON.stringify(data, null, 4))
 	}
 
 	sendProgresses = newProgresses => {
@@ -559,5 +583,9 @@ export default class extends React.Component {
 
 			localStorage.setItem(KEY_LOCAL_STORAGE_DATA, JSON.stringify(newData))
 		}
+	}
+
+	seeMyPerformance() {
+		alert('Hey')
 	}
 }
