@@ -52,7 +52,7 @@ export default class extends React.Component {
 							opacity: mode === 'Main' && index !== null ? FADE_OPACITY : 1
 						}}
 					>
-						Productivity Planner
+						Dedicated Time Winner
 					</h1>
 				</div>
 
