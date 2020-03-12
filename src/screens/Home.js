@@ -19,12 +19,14 @@ export default class extends React.Component {
 	taskName = ''
 
 	state = {
-		index: null,
-		data: [],
-		mode: 'Main',
 		addTaskToIndex: null,
+		colorsData: undefined,
+		data: [],
+		index: null,
+		isBreakProcessingCount: false,
 		isProcessingCount: false,
-		isBreakProcessingCount: false
+		isShowPerformanceChart: false,
+		mode: 'Main'
 	}
 
 	componentDidMount() {
@@ -33,7 +35,7 @@ export default class extends React.Component {
 
 	render() {
 		const { state } = this
-		const { addTaskToIndex, data, index, mode, isProcessingCount, isBreakProcessingCount } = state
+		const { addTaskToIndex, colorsData, data, index, mode, isProcessingCount, isBreakProcessingCount, isShowPerformanceChart } = state
 
 		return (
 			<div
@@ -279,9 +281,16 @@ export default class extends React.Component {
 					}
 				</div>
 
-				<PerformanceChart
-					nativeData = {data}
-				/>
+				{
+					isShowPerformanceChart ?
+						<PerformanceChart
+							colorsData = {colorsData}
+							nativeData = {data}
+							onDismiss = {() => this.setState({isShowPerformanceChart: false})}
+						/>
+						:
+						null
+				}
 
 				{
 					isProcessingCount ?
@@ -326,10 +335,10 @@ export default class extends React.Component {
 		let runningProgress = await localStorage.getItem(keys.LOCAL_STORAGE_RUNNING_PROGRESS)
 		let runningBreakProgress = await localStorage.getItem(keys.LOCAL_STORAGE_RUNNING_BREAK_PROGRESS)
 
+		this.updateColorsData()
+
 		if(data !== null) {
 			data = JSON.parse(data)
-
-			navigator.clipboard.writeText(JSON.stringify(data, null, 4))
 
 			for(const item of data) {
 				if(this.latestId < item.id) {
@@ -410,7 +419,9 @@ export default class extends React.Component {
 		
 		this.updateProgresses(newData, index + this.progresses.length - 1)
 
-		this.assignColorIfHaveNoColor(newData[index].activityName)
+		await this.assignColorIfHaveNoColor(newData[index].activityName)
+
+		this.updateColorsData()
 	}
 
 	sendBreakProgress = (startedAt, dayDate, minutes) => {
@@ -615,6 +626,16 @@ export default class extends React.Component {
 	}
 
 	seeMyPerformance() {
-		alert('See performance chart')
+		this.setState({isShowPerformanceChart: true})
+	}
+
+	async updateColorsData() {
+		let colorsData = await localStorage.getItem(keys.LOCAL_STORAGE_ASSIGNED_COLORS)
+	
+		if(colorsData !== null) {
+			colorsData = JSON.parse(colorsData)
+
+			this.setState({colorsData})
+		}
 	}
 }

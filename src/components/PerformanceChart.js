@@ -8,175 +8,202 @@ export default class extends React.Component {
         maxSpendMinutes: 360
     }
 
-    async componentDidMount() {
-        await this.loadData()
-        
+    componentDidMount() {
         this.calculateMaxSpendTime()
     }
 
     render() {
-        const chartHeight = 400
-
         return (
             <div
                 style = {{
+                    bottom: 0,
                     display: 'flex',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
+                    left: 0,
+                    position: 'fixed',
+                    right: 0,
+                    top: 0
                 }}
             >
+                <a
+                    href = '/#'
+                    onClick = {this.props.onDismiss}
+                    style = {{
+                        backgroundColor: 'rgba(0,0,0,0.8)',
+                        bottom: 0,
+                        left: 0,
+                        position: 'absolute',
+                        right: 0,
+                        top: 0
+                    }}
+                />
+
                 <div
                     style = {{
-                        backgroundColor: 'white',
-                        borderRadius: 7,
+                        bottom: 80,
                         display: 'flex',
-                        minWidth: 250,
-                        padding: 20
+                        position: 'absolute',
+                        top: 80,
+                        zIndex: 1
                     }}
                 >
-                    {
-                        this.state.data.map((item, index) => {
-                            return (
-                                <div
-                                    style = {{
-                                        alignItems: 'center',
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        marginLeft: index === 0 ? 0 : 10
-                                    }}
-                                >
-                                    <a
-                                        href = '#progresses'
-                                        // onClick = {() => this.props.selectDate(moment(item.date).format('YYYY-MM-DD'))}
-                                    >
-                                        <p
-                                            style = {{
-                                                color: 'black',
-                                                fontSize: 12
-                                            }}
-                                        >
-                                            {moment(item.date).format('DD/MM')}
-                                        </p>
-                                    </a>
-
+                    <div
+                        style = {{
+                            backgroundColor: 'white',
+                            borderRadius: 7,
+                            display: 'flex',
+                            minWidth: 250,
+                            padding: 20
+                        }}
+                    >
+                        {
+                            this.getPerformanceData().map((item, index) => {
+                                return (
                                     <div
                                         style = {{
-                                            alignItems: 'flex-end',
+                                            alignItems: 'center',
                                             display: 'flex',
-                                            marginTop: 10,
-                                            minHeight: chartHeight
+                                            flexDirection: 'column',
+                                            marginLeft: index === 0 ? 0 : 10
                                         }}
                                     >
+                                        <a
+                                            href = '#progresses'
+                                            // onClick = {() => this.props.selectDate(moment(item.date).format('YYYY-MM-DD'))}
+                                        >
+                                            <p
+                                                style = {{
+                                                    color: 'black',
+                                                    fontSize: 12
+                                                }}
+                                            >
+                                                {moment(item.date).format('DD/MM')}
+                                            </p>
+                                        </a>
+
                                         <div
                                             style = {{
+                                                alignItems: 'flex-end',
                                                 display: 'flex',
-                                                flexDirection: 'column-reverse',
-                                                height: this.getTotalThisDateDataValue(item) / this.state.maxSpendMinutes * chartHeight,
-                                                width: 30
+                                                marginTop: 10,
+                                                minHeight: 'calc(100% - 20px)'
                                             }}
                                         >
-                                            {
-                                                item.values.map(valueItem => {
-                                                    return (
-                                                        <a
-                                                            href = '#progresses'
-                                                            onClick = {() => {
-                                                                // this.props.selectDate(moment(item.date).format('YYYY-MM-DD'))
-
-                                                                setTimeout(() => alert(valueItem.activityName + ' (' + valueItem.spendMinutes + ' mins)' + '\n\n' + valueItem.taskName + '\nProgress: ' + valueItem.progress), 100)
-                                                            }}
-                                                            style = {{
-                                                                alignItems: 'center',
-                                                                backgroundColor: valueItem.color,
-                                                                border: '2px dotted black',
-                                                                color: 'white',
-                                                                display: 'flex',
-                                                                flexDirection: 'column',
-                                                                fontSize: 12,
-                                                                fontWeight: 'bold',
-                                                                flex: valueItem.spendMinutes,
-                                                                justifyContent: 'center',
-                                                                textShadow: '-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000'
-                                                            }}
-                                                        >
-                                                            <p>
-                                                                {valueItem.spendMinutes}
-                                                            </p>
-                                                            
-                                                            <p>
-                                                                {valueItem.progress}
-                                                            </p>
-                                                        </a>
-                                                    )
-                                                })
-                                            }
+                                            <div
+                                                style = {{
+                                                    display: 'flex',
+                                                    flexDirection: 'column-reverse',
+                                                    height:  Number(this.getTotalThisDateDataValue(item) / this.state.maxSpendMinutes * 100).toString() + '%',
+                                                    width: 30
+                                                }}
+                                            >
+                                                {
+                                                    item.values.map(valueItem => {
+                                                        return (
+                                                            <a
+                                                                href = '#progresses'
+                                                                onClick = {() => {
+                                                                    setTimeout(() => {
+                                                                        if(valueItem.type === 'productivity') {
+                                                                            alert(valueItem.activityName + ' (' + valueItem.spendMinutes + ' mins)' + '\n\n' + valueItem.taskName + '\nProgress: ' + valueItem.progress)
+                                                                        } else if(valueItem.type === 'break') {
+                                                                            alert('Break (' + valueItem.spendMinutes + ' mins)')
+                                                                        }
+                                                                    }, 100)
+                                                                }}
+                                                                style = {{
+                                                                    alignItems: 'center',
+                                                                    backgroundColor: valueItem.color,
+                                                                    border: '2px dotted black',
+                                                                    color: 'white',
+                                                                    display: 'flex',
+                                                                    flexDirection: 'column',
+                                                                    fontSize: 12,
+                                                                    fontWeight: 'bold',
+                                                                    flex: valueItem.spendMinutes,
+                                                                    justifyContent: 'center',
+                                                                    textShadow: '-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000'
+                                                                }}
+                                                            >
+                                                                <p>
+                                                                    {valueItem.spendMinutes}
+                                                                </p>
+                                                                
+                                                                <p>
+                                                                    {valueItem.progress}
+                                                                </p>
+                                                            </a>
+                                                        )
+                                                    })
+                                                }
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            )
-                        })
-                    }
+                                )
+                            })
+                        }
+                    </div>
                 </div>
             </div>
         )
     }
 
-    async loadData() {
+    getPerformanceData() {
         const { props } = this
-        const { nativeData } = props
-        
-        // const newData = [
-        //     {
-        //         "type": "productivity",
-        //         "activityName": "Dedicated Time Winner",
-        //         "taskName": "Update PM",
-        //         "startedAt": "15:29",
-        //         "minutes": 90,
-        //         "emoji": "💪",
-        //         "id": 2,
-        //         "dayDate": "2020-03-12"
-        //     },
-        //     {
-        //         "type": "productivity",
-        //         "activityName": "Sewa-Sewa",
-        //         "taskName": "Memasang API home",
-        //         "startedAt": "11:29",
-        //         "minutes": 120,
-        //         "emoji": "💪",
-        //         "id": 1,
-        //         "dayDate": "2020-03-12"
-        //     }
-        // ]
+        const { colorsData, nativeData } = props
 
-        const data = [
-            {
-                date: moment('2020-03-11').format('YYYY-MM-DD'),
-                values: [
-                    {
-                        color: 'pink',
-                        start: '12:00',
-                        spendMinutes: 360,
-                        activityName: 'Testing Activity 2',
-                        taskName: 'Testing Task',
-                        progress: '💪'
-                    }
-                ]
-            },
-            {
-                date: moment('2020-03-12').format('YYYY-MM-DD'),
-                values: [
-                    {
-                        color: 'crimson',
-                        start: '18:30',
-                        spendMinutes: 180,
-                        activityName: 'Testing Activity',
-                        taskName: 'Testing Task',
-                        progress: '💪'
-                    }
-                ]
+        let data = []
+
+        for(const item of nativeData) {
+            let isDateRegisteredInIndex = null
+
+            for(const dataIndex in data) {
+                if(data[dataIndex].date === item.dayDate) {
+                    isDateRegisteredInIndex = dataIndex
+
+                    break
+                }
             }
-        ]
 
-        data.sort((a,b) => (a.date > b.date) ? 1 : ((b.date > a.date) ? -1 : 0))
+            let valuesToAdd = {}
+
+            if(item.type === 'productivity') {
+                valuesToAdd = {
+                    color: colorsData === undefined ? 'gray' : colorsData[item.activityName],
+                    start: item.startedAt,
+                    spendMinutes: item.minutes,
+                    activityName: item.activityName,
+                    taskName: item.taskName,
+                    progress: item.emoji,
+                    type: item.type,
+                    id: item.id
+                }
+            } else if(item.type === 'break') {
+                valuesToAdd = {
+                    color: 'darkslateblue',
+                    start: item.startedAt,
+                    spendMinutes: item.minutes,
+                    activityName: 'Break',
+                    taskName: '',
+                    progress: '',
+                    type: item.type,
+                    id: item.id
+                }
+            }
+
+            if(isDateRegisteredInIndex === null) {
+                data.push({
+                    date: item.dayDate,
+                    values: [
+                        valuesToAdd
+                    ]
+                })
+            } else {
+                data[isDateRegisteredInIndex].values.push(valuesToAdd)
+
+                data[isDateRegisteredInIndex].values.sort((a,b) => (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0))
+            }
+        }
 
         const dataToShow = []
 
@@ -199,13 +226,13 @@ export default class extends React.Component {
             }
         }
 
-        await this.setState({data: dataToShow})
+        return dataToShow
     }
 
     calculateMaxSpendTime() {
         let maxSpendMinutes = this.state.maxSpendMinutes
 
-        for(const data of this.state.data) {
+        for(const data of this.getPerformanceData()) {
             if(this.getTotalThisDateDataValue(data) > maxSpendMinutes) {
                 maxSpendMinutes = this.getTotalThisDateDataValue(data)
             }
