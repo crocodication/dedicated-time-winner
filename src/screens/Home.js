@@ -1,5 +1,7 @@
 import React from 'react'
 
+import moment from 'moment'
+
 import ProductivityItem from '../components/ProductivityItem'
 import BreakItem from '../components/BreakItem'
 import AddTaskModal from '../components/AddTaskModal'
@@ -26,7 +28,8 @@ export default class extends React.Component {
 		isBreakProcessingCount: false,
 		isProcessingCount: false,
 		isShowPerformanceChart: false,
-		mode: 'Main'
+		mode: 'Main',
+		selectedDate: moment().format('YYYY-MM-DD')
 	}
 
 	componentDidMount() {
@@ -35,7 +38,7 @@ export default class extends React.Component {
 
 	render() {
 		const { state } = this
-		const { addTaskToIndex, colorsData, data, index, mode, isProcessingCount, isBreakProcessingCount, isShowPerformanceChart } = state
+		const { addTaskToIndex, colorsData, data, index, mode, isProcessingCount, isBreakProcessingCount, isShowPerformanceChart, selectedDate } = state
 
 		return (
 			<div
@@ -135,108 +138,112 @@ export default class extends React.Component {
 
 					{
 						data.map((dataItem, dataIndex) => {
-							return (
-								<div
-									key = {dataItem.id}
-								>
-									{
-										dataIndex !== 0 ?
-											(
-												mode === 'View Edit' && index != null && dataIndex <= index + 1 ?	
-													<div
-														className = 'item-filler'
-													>
-														<div
-															className = 'add-item-filler-container'
-														>
-															<div
-																className = 'add-item'
-																style = {{
-																	margin: 0
-																}}
-															>
-																<a
-																	href = '/#'
-																	onClick = {() => this.addTask(dataIndex)}
-																>
-																	<p>
-																		+ Add Task
-																	</p>
-																</a>
-															</div>
-
-															<div
-																className = 'add-item-divider'
-															/>
-
-															<div
-																className = 'add-item'
-																style = {{
-																	margin: 0
-																}}
-															>
-																<a
-																	href = '/#'
-																	onClick = {() => this.addBreak(dataIndex)}
-																>
-																	<p>
-																		+ Add Break
-																	</p>
-																</a>
-															</div>
-														</div>
-													</div>
-													:
-													<div
-														className = 'item-filler-permanent'
-													/>
-											)
-											:
-											null
-									}
-
+							if(dataItem.dayDate === selectedDate) {
+								return (
 									<div
-										style = {{
-											opacity: (
-												(
-													mode === 'Main' &&
-													index !== null &&
-													index !== dataIndex
-												)
-												||
-												(
-													mode === 'View Edit' &&
-													index !== null &&
-													index < dataIndex
-												)
-											) ? FADE_OPACITY : 1
-										}}
+										key = {dataItem.id}
 									>
 										{
-											dataItem.type === 'productivity' ?
-												<ProductivityItem
-													focusAtIndex = {index}
-													index = {dataIndex}
-													item = {dataItem}
-													mode = {mode}
-													onRemove = {() => this.removeItem(dataIndex)}
-													onStart = {() => this.setState({isProcessingCount: true})}
-												/>
+											dataIndex !== 0 ?
+												(
+													mode === 'View Edit' && index != null && dataIndex <= index + 1 ?	
+														<div
+															className = 'item-filler'
+														>
+															<div
+																className = 'add-item-filler-container'
+															>
+																<div
+																	className = 'add-item'
+																	style = {{
+																		margin: 0
+																	}}
+																>
+																	<a
+																		href = '/#'
+																		onClick = {() => this.addTask(dataIndex)}
+																	>
+																		<p>
+																			+ Add Task
+																		</p>
+																	</a>
+																</div>
+	
+																<div
+																	className = 'add-item-divider'
+																/>
+	
+																<div
+																	className = 'add-item'
+																	style = {{
+																		margin: 0
+																	}}
+																>
+																	<a
+																		href = '/#'
+																		onClick = {() => this.addBreak(dataIndex)}
+																	>
+																		<p>
+																			+ Add Break
+																		</p>
+																	</a>
+																</div>
+															</div>
+														</div>
+														:
+														<div
+															className = 'item-filler-permanent'
+														/>
+												)
 												:
-												<BreakItem
-													focusAtIndex = {index}
-													index = {dataIndex}
-													item = {dataItem}
-													mode = {mode}
-													onRemove = {() => this.removeItem(dataIndex)}
-													onStart = {() => this.setState({isBreakProcessingCount: true})}
-												/>
+												null
 										}
+	
+										<div
+											style = {{
+												opacity: (
+													(
+														mode === 'Main' &&
+														index !== null &&
+														index !== dataIndex
+													)
+													||
+													(
+														mode === 'View Edit' &&
+														index !== null &&
+														index < dataIndex
+													)
+												) ? FADE_OPACITY : 1
+											}}
+										>
+											{
+												dataItem.type === 'productivity' ?
+													<ProductivityItem
+														focusAtIndex = {index}
+														index = {dataIndex}
+														item = {dataItem}
+														mode = {mode}
+														onRemove = {() => this.removeItem(dataIndex)}
+														onStart = {() => this.setState({isProcessingCount: true})}
+													/>
+													:
+													<BreakItem
+														focusAtIndex = {index}
+														index = {dataIndex}
+														item = {dataItem}
+														mode = {mode}
+														onRemove = {() => this.removeItem(dataIndex)}
+														onStart = {() => this.setState({isBreakProcessingCount: true})}
+													/>
+											}
+										</div>
 									</div>
-								</div>
-							)
-						})
-					}
+								)
+							} else {
+								return null
+							}
+						}
+					)}
 
 					{
 						mode === 'View Edit' && data.length > 0 && index === data.length - 1 ?
@@ -564,7 +571,7 @@ export default class extends React.Component {
 		if(asssignedColors !== null) {
 			asssignedColorsJSON = JSON.parse(asssignedColors)
 
-			if(asssignedColorsJSON[activityName] == undefined) {
+			if(asssignedColorsJSON[activityName] === undefined) {
 				asssignedColorsJSON[activityName] = getRandomColor()
 			}
 		} else {

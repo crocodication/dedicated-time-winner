@@ -36,7 +36,8 @@ export default class extends React.Component {
                         right: 0,
                         top: 0
                     }}
-                />
+                >
+                </a>
 
                 <div
                     style = {{
@@ -105,9 +106,9 @@ export default class extends React.Component {
                                                                 onClick = {() => {
                                                                     setTimeout(() => {
                                                                         if(valueItem.type === 'productivity') {
-                                                                            alert(valueItem.activityName + ' (' + valueItem.spendMinutes + ' mins)' + '\n\n' + valueItem.taskName + '\nProgress: ' + valueItem.progress)
+                                                                            alert(`${valueItem.activityName} (${valueItem.spendMinutes} mins)\n\n${valueItem.taskName}\nProgress: ${valueItem.progress}`)
                                                                         } else if(valueItem.type === 'break') {
-                                                                            alert('Break (' + valueItem.spendMinutes + ' mins)')
+                                                                            alert(`Break (' + ${valueItem.spendMinutes} + ' mins)`)
                                                                         }
                                                                     }, 100)
                                                                 }}
@@ -201,7 +202,7 @@ export default class extends React.Component {
             } else {
                 data[isDateRegisteredInIndex].values.push(valuesToAdd)
 
-                data[isDateRegisteredInIndex].values.sort((a,b) => (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0))
+                data[isDateRegisteredInIndex].values.sort((a,b) => (a.start > b.start) ? 1 : ((b.start > a.start) ? -1 : 0))
             }
         }
 
