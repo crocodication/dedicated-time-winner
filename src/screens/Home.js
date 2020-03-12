@@ -5,13 +5,12 @@ import BreakItem from '../components/BreakItem'
 import AddTaskModal from '../components/AddTaskModal'
 import CounterModal from '../components/CounterModal'
 import BreakCounterModal from '../components/BreakCounterModal'
+import PerformanceChart from '../components/PerformanceChart'
+
+import keys from '../refs/keys'
+import { getRandomColor } from '../refs/colors'
 
 const FADE_OPACITY = 0.2
-
-const KEY_LOCAL_STORAGE_DATA = 'v2_data'
-const KEY_LOCAL_STORAGE_INDEX = 'v2_index'
-const KEY_LOCAL_STORAGE_RUNNING_PROGRESS = 'v2_running_progress'
-const KEY_LOCAL_STORAGE_RUNNING_BREAK_PROGRESS = 'v2_running_break_progress'
 
 export default class extends React.Component {
 	latestId = 0
@@ -280,6 +279,8 @@ export default class extends React.Component {
 					}
 				</div>
 
+				<PerformanceChart />
+
 				{
 					isProcessingCount ?
 						<CounterModal
@@ -313,18 +314,60 @@ export default class extends React.Component {
 	}
 
 	async loadData() {
-		// localStorage.removeItem(KEY_LOCAL_STORAGE_DATA)
-		// localStorage.removeItem(KEY_LOCAL_STORAGE_INDEX)
-		// localStorage.removeItem(KEY_LOCAL_STORAGE_RUNNING_PROGRESS)
-		// localStorage.removeItem(KEY_LOCAL_STORAGE_RUNNING_BREAK_PROGRESS)
+		// localStorage.removeItem(keys.LOCAL_STORAGE_DATA)
+		// localStorage.removeItem(keys.LOCAL_STORAGE_INDEX)
+		// localStorage.removeItem(keys.LOCAL_STORAGE_RUNNING_PROGRESS)
+		// localStorage.removeItem(keys.LOCAL_STORAGE_RUNNING_BREAK_PROGRESS)
+		// await localStorage.setItem(keys.LOCAL_STORAGE_DATA, `
+		// [
+		// 	{
+		// 		"type": "productivity",
+		// 		"activityName": "Dedicated Time Winner",
+		// 		"taskName": "Memasang API home",
+		// 		"startedAt": "10:59",
+		// 		"minutes": 120,
+		// 		"emoji": "💪",
+		// 		"id": 14
+		// 	},
+		// 	{
+		// 		"type": "productivity",
+		// 		"activityName": "Sewa-Sewa",
+		// 		"taskName": "Memasang API home",
+		// 		"startedAt": "10:59",
+		// 		"minutes": 90,
+		// 		"emoji": "💪",
+		// 		"id": 12
+		// 	},
+		// 	{
+		// 		"type": "productivity",
+		// 		"activityName": "Sewa-Sewa",
+		// 		"taskName": "Memasang API home",
+		// 		"startedAt": "10:58",
+		// 		"minutes": 50,
+		// 		"emoji": "💪",
+		// 		"id": 8
+		// 	},
+		// 	{
+		// 		"type": "productivity",
+		// 		"activityName": "Dedicated Time Winner",
+		// 		"taskName": "Update PM",
+		// 		"startedAt": "10:52",
+		// 		"minutes": 45,
+		// 		"emoji": "💪",
+		// 		"id": 1
+		// 	}
+		// ]
+		// `)
 
-		let data = await localStorage.getItem(KEY_LOCAL_STORAGE_DATA)
-		let newIndex = await localStorage.getItem(KEY_LOCAL_STORAGE_INDEX)
-		let runningProgress = await localStorage.getItem(KEY_LOCAL_STORAGE_RUNNING_PROGRESS)
-		let runningBreakProgress = await localStorage.getItem(KEY_LOCAL_STORAGE_RUNNING_BREAK_PROGRESS)
+		let data = await localStorage.getItem(keys.LOCAL_STORAGE_DATA)
+		let newIndex = await localStorage.getItem(keys.LOCAL_STORAGE_INDEX)
+		let runningProgress = await localStorage.getItem(keys.LOCAL_STORAGE_RUNNING_PROGRESS)
+		let runningBreakProgress = await localStorage.getItem(keys.LOCAL_STORAGE_RUNNING_BREAK_PROGRESS)
 
 		if(data !== null) {
 			data = JSON.parse(data)
+
+			navigator.clipboard.writeText(JSON.stringify(data, null, 4))
 
 			for(const item of data) {
 				if(this.latestId < item.id) {
@@ -348,7 +391,7 @@ export default class extends React.Component {
 		}
 	}
 
-	sendProgresses = newProgresses => {
+	sendProgresses = async(newProgresses) => {
 		const { state } = this
 		const { data, index } = state
 
@@ -402,11 +445,13 @@ export default class extends React.Component {
 			index: index + this.progresses.length - 1,
 			data: newData
 		})
-
+		
 		this.updateProgresses(newData, index + this.progresses.length - 1)
+
+		this.assignColorIfHaveNoColor(newData[index].activityName)
 	}
 
-	sendBreakProgress = (startedAt, minutes) => {
+	sendBreakProgress = (startedAt, dayDate, minutes) => {
 		const { state } = this
 		const { data, index } = state
 
@@ -415,6 +460,7 @@ export default class extends React.Component {
 
 		newData[index].startedAt = startedAt
 		newData[index].minutes = minutes
+		newData[index].dayDate = dayDate
 
 		this.setState({
 			isBreakProcessingCount: false,
@@ -423,12 +469,12 @@ export default class extends React.Component {
 		})
 
 		if(newIndex !== null) {
-			localStorage.setItem(KEY_LOCAL_STORAGE_INDEX, newIndex)
+			localStorage.setItem(keys.LOCAL_STORAGE_INDEX, newIndex)
 		} else {
-			localStorage.removeItem(KEY_LOCAL_STORAGE_INDEX)
+			localStorage.removeItem(keys.LOCAL_STORAGE_INDEX)
 		}
 
-		localStorage.setItem(KEY_LOCAL_STORAGE_DATA, JSON.stringify(newData))
+		localStorage.setItem(keys.LOCAL_STORAGE_DATA, JSON.stringify(newData))
 	}
 	 
 	removeItem(dataIndex) {
@@ -451,12 +497,12 @@ export default class extends React.Component {
 		})
 
 		if(newIndex !== null) {
-			localStorage.setItem(KEY_LOCAL_STORAGE_INDEX, newIndex)
+			localStorage.setItem(keys.LOCAL_STORAGE_INDEX, newIndex)
 		} else {
-			localStorage.removeItem(KEY_LOCAL_STORAGE_INDEX)
+			localStorage.removeItem(keys.LOCAL_STORAGE_INDEX)
 		}
 
-		localStorage.setItem(KEY_LOCAL_STORAGE_DATA, JSON.stringify(newData))
+		localStorage.setItem(keys.LOCAL_STORAGE_DATA, JSON.stringify(newData))
 	}
 	 
 	addTask(toIndex) {
@@ -490,12 +536,12 @@ export default class extends React.Component {
 		})
 
 		if(newIndex !== null) {
-			localStorage.setItem(KEY_LOCAL_STORAGE_INDEX, newIndex)
+			localStorage.setItem(keys.LOCAL_STORAGE_INDEX, newIndex)
 		} else {
-			localStorage.removeItem(KEY_LOCAL_STORAGE_INDEX)
+			localStorage.removeItem(keys.LOCAL_STORAGE_INDEX)
 		}
 
-		localStorage.setItem(KEY_LOCAL_STORAGE_DATA, JSON.stringify(newData))
+		localStorage.setItem(keys.LOCAL_STORAGE_DATA, JSON.stringify(newData))
 	}
 
 	async applyAddTask(activityName, taskName) {
@@ -529,12 +575,30 @@ export default class extends React.Component {
 		})
 
 		if(newIndex !== null) {
-			localStorage.setItem(KEY_LOCAL_STORAGE_INDEX, newIndex)
+			localStorage.setItem(keys.LOCAL_STORAGE_INDEX, newIndex)
 		} else {
-			localStorage.removeItem(KEY_LOCAL_STORAGE_INDEX)
+			localStorage.removeItem(keys.LOCAL_STORAGE_INDEX)
 		}
 
-		localStorage.setItem(KEY_LOCAL_STORAGE_DATA, JSON.stringify(newData))
+		localStorage.setItem(keys.LOCAL_STORAGE_DATA, JSON.stringify(newData))
+	}
+
+	async assignColorIfHaveNoColor(activityName) {
+		const asssignedColors = await localStorage.getItem(keys.LOCAL_STORAGE_ASSIGNED_COLORS)
+
+		let asssignedColorsJSON = {}
+
+		if(asssignedColors !== null) {
+			asssignedColorsJSON = JSON.parse(asssignedColors)
+
+			if(asssignedColorsJSON[activityName] == undefined) {
+				asssignedColorsJSON[activityName] = getRandomColor()
+			}
+		} else {
+			asssignedColorsJSON[activityName] = getRandomColor()
+		}
+
+		await localStorage.setItem(keys.LOCAL_STORAGE_ASSIGNED_COLORS, JSON.stringify(asssignedColorsJSON))
 	}
 	 
 	updateProgresses(newData, latestIndex, progressIndex = 0) {
@@ -546,6 +610,7 @@ export default class extends React.Component {
 			newData[currentIndex].startedAt = thisProgress.startedAt
 			newData[currentIndex].minutes = thisProgress.minutes
 			newData[currentIndex].emoji = thisProgress.emoji
+			newData[currentIndex].dayDate = thisProgress.dayDate
 		} else {
 			const progressType = thisProgress.type
 
@@ -553,9 +618,11 @@ export default class extends React.Component {
 				newData[currentIndex].startedAt = thisProgress.startedAt
 				newData[currentIndex].minutes = thisProgress.minutes
 				newData[currentIndex].emoji = thisProgress.emoji
+				newData[currentIndex].dayDate = thisProgress.dayDate
 			} else if(progressType === 'break') {
 				newData[currentIndex].startedAt = thisProgress.startedAt
 				newData[currentIndex].minutes = thisProgress.minutes
+				newData[currentIndex].dayDate = thisProgress.dayDate
 			}
 		}
 
@@ -576,16 +643,16 @@ export default class extends React.Component {
 			}, 150)
 		} else {
 			if(currentIndex) {
-				localStorage.setItem(KEY_LOCAL_STORAGE_INDEX, currentIndex)
+				localStorage.setItem(keys.LOCAL_STORAGE_INDEX, currentIndex)
 			} else {
-				localStorage.removeItem(KEY_LOCAL_STORAGE_INDEX)
+				localStorage.removeItem(keys.LOCAL_STORAGE_INDEX)
 			}
 
-			localStorage.setItem(KEY_LOCAL_STORAGE_DATA, JSON.stringify(newData))
+			localStorage.setItem(keys.LOCAL_STORAGE_DATA, JSON.stringify(newData))
 		}
 	}
 
 	seeMyPerformance() {
-		alert('Hey')
+		alert('See performance chart')
 	}
 }

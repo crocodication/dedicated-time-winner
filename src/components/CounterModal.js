@@ -2,7 +2,7 @@ import React from 'react'
 
 import moment from 'moment'
 
-const KEY_LOCAL_STORAGE_RUNNING_PROGRESS = 'v2_running_progress'
+import keys from '../refs/keys'
 
 export default class extends React.Component {
     state = {
@@ -16,7 +16,12 @@ export default class extends React.Component {
     isCounting = true
 
     async componentDidMount() {
-        let progresses = await localStorage.getItem(KEY_LOCAL_STORAGE_RUNNING_PROGRESS)
+        let progresses = await localStorage.getItem(keys.LOCAL_STORAGE_RUNNING_PROGRESS)
+        const progressesDayDate = await localStorage.getItem(keys.LOCAL_STORAGE_RUNNING_PROGRESS_DAY_DATE)
+
+        if(progressesDayDate === null) {
+            localStorage.setItem(keys.LOCAL_STORAGE_RUNNING_PROGRESS_DAY_DATE, moment().format('YYYY-MM-DD'))
+        }
 
         if(progresses !== null) {
             progresses = JSON.parse(progresses)
@@ -30,7 +35,7 @@ export default class extends React.Component {
 
             this.setState({progresses})
         } else {
-            localStorage.setItem(KEY_LOCAL_STORAGE_RUNNING_PROGRESS, JSON.stringify([
+            localStorage.setItem(keys.LOCAL_STORAGE_RUNNING_PROGRESS, JSON.stringify([
                 {
                     startedAt: this.state.startTime.toString(),
                     minutes: 0,
@@ -174,7 +179,7 @@ export default class extends React.Component {
     }
 
     async markProgressAs(progressState) {
-        await localStorage.removeItem(KEY_LOCAL_STORAGE_RUNNING_PROGRESS)
+        await localStorage.removeItem(keys.LOCAL_STORAGE_RUNNING_PROGRESS)
         
         const { props, state } = this
         const { minutes, progresses, startTime } = state
@@ -185,6 +190,14 @@ export default class extends React.Component {
             emoji: progressState.value.split(' ')[0].trim(),
             type: 'productivity'
         })
+
+        const progressesDayDate = await localStorage.getItem(keys.LOCAL_STORAGE_RUNNING_PROGRESS_DAY_DATE)
+
+        for(const progress of newProgresses) {
+            progress.dayDate = progressesDayDate
+        }
+
+        await localStorage.removeItem(keys.LOCAL_STORAGE_RUNNING_PROGRESS_DAY_DATE)
 
         props.sendProgresses(newProgresses)
 
@@ -209,7 +222,7 @@ export default class extends React.Component {
                 type: 'productivity'
             })})
 
-            localStorage.setItem(KEY_LOCAL_STORAGE_RUNNING_PROGRESS, JSON.stringify(
+            localStorage.setItem(keys.LOCAL_STORAGE_RUNNING_PROGRESS, JSON.stringify(
                 this.state.progresses.concat({
                     startedAt: moment().toString(),
                     minutes: 0,
@@ -222,7 +235,7 @@ export default class extends React.Component {
                 type: 'break'
             })})
 
-            localStorage.setItem(KEY_LOCAL_STORAGE_RUNNING_PROGRESS, JSON.stringify(
+            localStorage.setItem(keys.LOCAL_STORAGE_RUNNING_PROGRESS, JSON.stringify(
                 this.state.progresses.concat({
                     startedAt: moment().toString(),
                     minutes: 0,

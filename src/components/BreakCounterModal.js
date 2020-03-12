@@ -2,7 +2,7 @@ import React from 'react'
 
 import moment from 'moment'
 
-const KEY_LOCAL_STORAGE_RUNNING_BREAK_PROGRESS = 'v2_running_break_progress'
+import keys from '../refs/keys'
 
 export default class extends React.Component {
     state = {
@@ -14,12 +14,17 @@ export default class extends React.Component {
     isCounting = true
 
     async componentDidMount() {
-        const runningBreakProgress = await localStorage.getItem(KEY_LOCAL_STORAGE_RUNNING_BREAK_PROGRESS)
+        const runningBreakProgress = await localStorage.getItem(keys.LOCAL_STORAGE_RUNNING_BREAK_PROGRESS)
+        const runningBreakProgressesDayDate = await localStorage.getItem(keys.LOCAL_STORAGE_RUNNING_BREAK_PROGRESS_DAY_DATE)
+
+        if(runningBreakProgressesDayDate === null) {
+            localStorage.setItem(keys.LOCAL_STORAGE_RUNNING_BREAK_PROGRESS_DAY_DATE, moment().format('YYYY-MM-DD'))
+        }
 
         if(runningBreakProgress !== null) {
             this.setState({startTime: moment(runningBreakProgress)})
         } else {
-            localStorage.setItem(KEY_LOCAL_STORAGE_RUNNING_BREAK_PROGRESS, moment().toString())
+            localStorage.setItem(keys.LOCAL_STORAGE_RUNNING_BREAK_PROGRESS, moment().toString())
         }
 
         this.startTickingTheTimer()
@@ -95,13 +100,18 @@ export default class extends React.Component {
     }
 
     async done() {
-        await localStorage.removeItem(KEY_LOCAL_STORAGE_RUNNING_BREAK_PROGRESS)
+        await localStorage.removeItem(keys.LOCAL_STORAGE_RUNNING_BREAK_PROGRESS)
 
         const { props, state } = this
         const { startTime, minutes } = state
 
+        const runningBreakProgressesDayDate = await localStorage.getItem(keys.LOCAL_STORAGE_RUNNING_BREAK_PROGRESS_DAY_DATE)
+
+        await localStorage.removeItem(keys.LOCAL_STORAGE_RUNNING_BREAK_PROGRESS_DAY_DATE)
+
         props.sendBreakProgress(
             startTime.format('HH:mm'),
+            runningBreakProgressesDayDate,
             minutes
         )
     }

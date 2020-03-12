@@ -20,15 +20,15 @@ export default class extends React.Component {
         return (
             <div
                 style = {{
-                    display: "flex",
-                    justifyContent: "center"
+                    display: 'flex',
+                    justifyContent: 'center'
                 }}
             >
                 <div
                     style = {{
-                        backgroundColor: "white",
+                        backgroundColor: 'white',
                         borderRadius: 7,
-                        display: "flex",
+                        display: 'flex',
                         minWidth: 250,
                         padding: 20
                     }}
@@ -38,38 +38,38 @@ export default class extends React.Component {
                             return (
                                 <div
                                     style = {{
-                                        alignItems: "center",
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        marginLeft: index == 0 ? 0 : 10
+                                        alignItems: 'center',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        marginLeft: index === 0 ? 0 : 10
                                     }}
                                 >
                                     <a
-                                        href = "#progresses"
-                                        onClick = {() => this.props.selectDate(moment(item.date).format("YYYY-MM-DD"))}
+                                        href = '#progresses'
+                                        // onClick = {() => this.props.selectDate(moment(item.date).format('YYYY-MM-DD'))}
                                     >
                                         <p
                                             style = {{
-                                                color: "black",
+                                                color: 'black',
                                                 fontSize: 12
                                             }}
                                         >
-                                            {moment(item.date).format("DD/MM")}
+                                            {moment(item.date).format('DD/MM')}
                                         </p>
                                     </a>
 
                                     <div
                                         style = {{
-                                            alignItems: "flex-end",
-                                            display: "flex",
+                                            alignItems: 'flex-end',
+                                            display: 'flex',
                                             marginTop: 10,
                                             minHeight: chartHeight
                                         }}
                                     >
                                         <div
                                             style = {{
-                                                display: "flex",
-                                                flexDirection: "column-reverse",
+                                                display: 'flex',
+                                                flexDirection: 'column-reverse',
                                                 height: this.getTotalThisDateDataValue(item) / this.state.maxSpendMinutes * chartHeight,
                                                 width: 30
                                             }}
@@ -78,24 +78,24 @@ export default class extends React.Component {
                                                 item.values.map(valueItem => {
                                                     return (
                                                         <a
-                                                            href = "#progresses"
+                                                            href = '#progresses'
                                                             onClick = {() => {
-                                                                this.props.selectDate(moment(item.date).format("YYYY-MM-DD"))
+                                                                // this.props.selectDate(moment(item.date).format('YYYY-MM-DD'))
 
-                                                                setTimeout(() => alert(valueItem.activityName + " (" + valueItem.spendMinutes + " mins)" + "\n\n" + valueItem.taskName + "\nProgress: " + valueItem.progress), 100)
+                                                                setTimeout(() => alert(valueItem.activityName + ' (' + valueItem.spendMinutes + ' mins)' + '\n\n' + valueItem.taskName + '\nProgress: ' + valueItem.progress), 100)
                                                             }}
                                                             style = {{
-                                                                alignItems: "center",
+                                                                alignItems: 'center',
                                                                 backgroundColor: valueItem.color,
-                                                                border: "2px dotted black",
-                                                                color: "white",
-                                                                display: "flex",
-                                                                flexDirection: "column",
+                                                                border: '2px dotted black',
+                                                                color: 'white',
+                                                                display: 'flex',
+                                                                flexDirection: 'column',
                                                                 fontSize: 12,
-                                                                fontWeight: "bold",
+                                                                fontWeight: 'bold',
                                                                 flex: valueItem.spendMinutes,
-                                                                justifyContent: "center",
-                                                                textShadow: "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000"
+                                                                justifyContent: 'center',
+                                                                textShadow: '-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000'
                                                             }}
                                                         >
                                                             <p>
@@ -121,49 +121,34 @@ export default class extends React.Component {
     }
 
     async loadData() {
-        const data = []
-
-        for(const activity of this.props.activities) {
-            for(const task of activity.tasks) {
-                for(const effort of task.efforts) {
-                    let foundSameDateInIndex = -1
-
-                    for(const dataIndex in data) {
-                        if(data[dataIndex].date === effort.date) {
-                            foundSameDateInIndex = dataIndex
-
-                            break
-                        }
+        const data = [
+            {
+                date: moment().format('2020-03-11'),
+                values: [
+                    {
+                        color: 'pink',
+                        start: '12:00',
+                        spendMinutes: 360,
+                        activityName: 'Testing Activity 2',
+                        taskName: 'Testing Task',
+                        progress: '💪'
                     }
-
-                    const items = []
-
-                    for(const item of effort.items) {
-                        if(item.progress === "🎯" || item.progress === "💪🏻") {
-                            items.push({
-                                color: activity.color,
-                                start: item.time.start,
-                                spendMinutes: item.time.minutes,
-                                activityName: activity.name,
-                                taskName: task.name,
-                                progress: item.progress
-                            })
-                        }
+                ]
+            },
+            {
+                date: moment().format('2020-03-12'),
+                values: [
+                    {
+                        color: 'crimson',
+                        start: '18:30',
+                        spendMinutes: 180,
+                        activityName: 'Testing Activity',
+                        taskName: 'Testing Task',
+                        progress: '💪'
                     }
-
-                    if(items.length > 0) {
-                        if(foundSameDateInIndex === -1) {
-                            data.push({
-                                date: effort.date,
-                                values: items.sort((a,b) => (a.start > b.start) ? 1 : ((b.start > a.start) ? -1 : 0))
-                            })
-                        } else {
-                            data[foundSameDateInIndex].values = data[foundSameDateInIndex].values.concat(items).sort((a,b) => (a.start > b.start) ? 1 : ((b.start > a.start) ? -1 : 0))
-                        }
-                    }
-                }
+                ]
             }
-        }
+        ]
 
         data.sort((a,b) => (a.date > b.date) ? 1 : ((b.date > a.date) ? -1 : 0))
 
@@ -175,7 +160,7 @@ export default class extends React.Component {
             date.setDate(date.getDate() - index)            
 
             dataToShow.unshift({
-                date: moment(date).format("YYYY-MM-DD"),
+                date: moment(date).format('YYYY-MM-DD'),
                 values: []
             })
         }
