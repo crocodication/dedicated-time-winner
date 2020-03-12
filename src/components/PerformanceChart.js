@@ -121,9 +121,35 @@ export default class extends React.Component {
     }
 
     async loadData() {
+        const { props } = this
+        const { nativeData } = props
+        
+        // const newData = [
+        //     {
+        //         "type": "productivity",
+        //         "activityName": "Dedicated Time Winner",
+        //         "taskName": "Update PM",
+        //         "startedAt": "15:29",
+        //         "minutes": 90,
+        //         "emoji": "💪",
+        //         "id": 2,
+        //         "dayDate": "2020-03-12"
+        //     },
+        //     {
+        //         "type": "productivity",
+        //         "activityName": "Sewa-Sewa",
+        //         "taskName": "Memasang API home",
+        //         "startedAt": "11:29",
+        //         "minutes": 120,
+        //         "emoji": "💪",
+        //         "id": 1,
+        //         "dayDate": "2020-03-12"
+        //     }
+        // ]
+
         const data = [
             {
-                date: moment().format('2020-03-11'),
+                date: moment('2020-03-11').format('YYYY-MM-DD'),
                 values: [
                     {
                         color: 'pink',
@@ -136,7 +162,7 @@ export default class extends React.Component {
                 ]
             },
             {
-                date: moment().format('2020-03-12'),
+                date: moment('2020-03-12').format('YYYY-MM-DD'),
                 values: [
                     {
                         color: 'crimson',

@@ -279,7 +279,9 @@ export default class extends React.Component {
 					}
 				</div>
 
-				<PerformanceChart />
+				<PerformanceChart
+					nativeData = {data}
+				/>
 
 				{
 					isProcessingCount ?
@@ -318,46 +320,6 @@ export default class extends React.Component {
 		// localStorage.removeItem(keys.LOCAL_STORAGE_INDEX)
 		// localStorage.removeItem(keys.LOCAL_STORAGE_RUNNING_PROGRESS)
 		// localStorage.removeItem(keys.LOCAL_STORAGE_RUNNING_BREAK_PROGRESS)
-		// await localStorage.setItem(keys.LOCAL_STORAGE_DATA, `
-		// [
-		// 	{
-		// 		"type": "productivity",
-		// 		"activityName": "Dedicated Time Winner",
-		// 		"taskName": "Memasang API home",
-		// 		"startedAt": "10:59",
-		// 		"minutes": 120,
-		// 		"emoji": "💪",
-		// 		"id": 14
-		// 	},
-		// 	{
-		// 		"type": "productivity",
-		// 		"activityName": "Sewa-Sewa",
-		// 		"taskName": "Memasang API home",
-		// 		"startedAt": "10:59",
-		// 		"minutes": 90,
-		// 		"emoji": "💪",
-		// 		"id": 12
-		// 	},
-		// 	{
-		// 		"type": "productivity",
-		// 		"activityName": "Sewa-Sewa",
-		// 		"taskName": "Memasang API home",
-		// 		"startedAt": "10:58",
-		// 		"minutes": 50,
-		// 		"emoji": "💪",
-		// 		"id": 8
-		// 	},
-		// 	{
-		// 		"type": "productivity",
-		// 		"activityName": "Dedicated Time Winner",
-		// 		"taskName": "Update PM",
-		// 		"startedAt": "10:52",
-		// 		"minutes": 45,
-		// 		"emoji": "💪",
-		// 		"id": 1
-		// 	}
-		// ]
-		// `)
 
 		let data = await localStorage.getItem(keys.LOCAL_STORAGE_DATA)
 		let newIndex = await localStorage.getItem(keys.LOCAL_STORAGE_INDEX)
