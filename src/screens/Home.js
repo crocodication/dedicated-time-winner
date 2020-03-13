@@ -364,8 +364,8 @@ export default class extends React.Component {
 	}
 
 	async loadData() {
-		localStorage.removeItem(keys.LOCAL_STORAGE_DATA)
-		localStorage.removeItem(keys.LOCAL_STORAGE_INDEX)
+		// localStorage.removeItem(keys.LOCAL_STORAGE_DATA)
+		// localStorage.removeItem(keys.LOCAL_STORAGE_INDEX)
 		// localStorage.removeItem(keys.LOCAL_STORAGE_RUNNING_PROGRESS)
 		// localStorage.removeItem(keys.LOCAL_STORAGE_RUNNING_BREAK_PROGRESS)
 		// await localStorage.setItem(keys.LOCAL_STORAGE_DATA, `
