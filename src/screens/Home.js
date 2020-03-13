@@ -29,7 +29,7 @@ export default class extends React.Component {
 		isProcessingCount: false,
 		isShowPerformanceChart: false,
 		mode: 'Main',
-		selectedDate: moment().format('YYYY-MM-DD')
+		selectedDate: moment('2020-03-13').format('YYYY-MM-DD')
 	}
 
 	componentDidMount() {
@@ -95,7 +95,7 @@ export default class extends React.Component {
 					className = 'home-content-container'
 				>
 					{
-						mode === 'View Edit' ?
+						mode === 'View Edit' && selectedDate === moment().format('YYYY-MM-DD') ?
 							<div
 								className = 'add-item-container'
 								style = {{
@@ -143,7 +143,7 @@ export default class extends React.Component {
 									key = {dataItem.id}
 								>
 									{
-										dataItem.dayDate === undefined || dataItem.dayDate === selectedDate ?
+										dataItem.dayDate === selectedDate || (selectedDate === moment().format('YYYY-MM-DD') && dataItem.dayDate === undefined) ?
 											<>
 												{
 													dataItem.id !== this.getTodayTopMostItemId() ?
@@ -249,7 +249,7 @@ export default class extends React.Component {
 					)}
 
 					{
-						mode === 'View Edit' && data.length > 0 && index === data.length - 1 ?
+						mode === 'View Edit' && data.length > 0 && index === data.length - 1 && selectedDate === moment().format('YYYY-MM-DD') ?
 							<div
 								className = 'add-item-container'
 								style = {{
@@ -343,7 +343,7 @@ export default class extends React.Component {
 
 		for(const dataIndex in latestData) {
 			if(this.state.selectedDate === moment().format('YYYY-MM-DD')) {
-				if(latestData[dataIndex] === undefined || latestData[dataIndex].dayDate === this.state.selectedDate) {
+				if(latestData[dataIndex].dayDate === undefined || latestData[dataIndex].dayDate === this.state.selectedDate) {
 					id = latestData[dataIndex].id
 				}
 			} else {
