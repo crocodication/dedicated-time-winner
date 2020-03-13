@@ -29,7 +29,7 @@ export default class extends React.Component {
 		isProcessingCount: false,
 		isShowPerformanceChart: false,
 		mode: 'Main',
-		selectedDate: moment('2020-03-13').format('YYYY-MM-DD')
+		selectedDate: moment('2020-03-12').format('YYYY-MM-DD')
 	}
 
 	componentDidMount() {
@@ -53,7 +53,7 @@ export default class extends React.Component {
 					<h1
 						style = {{
 							color: 'white',
-							opacity: mode === 'Main' && index !== null ? FADE_OPACITY : 1
+							opacity: mode === 'Main' && index !== null && selectedDate === moment().format('YYYY-MM-DD') ? FADE_OPACITY : 1
 						}}
 					>
 						Dedicated Time Winner
@@ -70,7 +70,7 @@ export default class extends React.Component {
 								href = '/#'
 								onClick = {() => this.seeMyPerformance()}
 								style = {{
-									opacity: mode === 'Main'  && index !== null ? FADE_OPACITY : 1
+									opacity: mode === 'Main'  && index !== null && selectedDate === moment().format('YYYY-MM-DD') ? FADE_OPACITY : 1
 								}}
 							>
 								See my performance
@@ -82,9 +82,15 @@ export default class extends React.Component {
 					<a
 						className = 'top-button'
 						href = '/#'
-						onClick = {() => this.setState({mode: mode === 'View Edit' ? 'Main' : 'View Edit'})}
+						onClick = {() => {
+							if(mode === 'View Edit') {
+								this.setState({selectedDate: moment().format('YYYY-MM-DD')})
+							}
+
+							this.setState({mode: mode === 'View Edit' ? 'Main' : 'View Edit'})
+						}}
 						style = {{
-							opacity: mode === 'Main'  && index !== null ? FADE_OPACITY : 1
+							opacity: mode === 'Main'  && index !== null && selectedDate === moment().format('YYYY-MM-DD') ? FADE_OPACITY : 1
 						}}
 					>
 						{mode === 'View Edit' ? 'Back to Main Area' : 'Go to View-Edit Area'}
@@ -215,7 +221,9 @@ export default class extends React.Component {
 																index !== null &&
 																index < dataIndex
 															)
-														) ? FADE_OPACITY : 1
+														)
+														&&
+														selectedDate === moment().format('YYYY-MM-DD') ? FADE_OPACITY : 1
 													}}
 												>
 													{
@@ -339,7 +347,6 @@ export default class extends React.Component {
 
 		const latestData = JSON.parse(JSON.stringify(this.state.data))
 		latestData.reverse()
-		console.log(`latest data is ${JSON.stringify(latestData, null, 4)}`)
 
 		for(const dataIndex in latestData) {
 			if(this.state.selectedDate === moment().format('YYYY-MM-DD')) {
@@ -352,8 +359,6 @@ export default class extends React.Component {
 				}
 			}
 		}
-
-		console.log(`id is ${id}`)
 
 		return id
 	}

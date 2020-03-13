@@ -61,6 +61,7 @@ export default class extends React.Component {
                             this.getPerformanceData().map((item, index) => {
                                 return (
                                     <div
+                                        key = {moment(item.date).format('DD/MM')}
                                         style = {{
                                             alignItems: 'center',
                                             display: 'flex',
@@ -103,12 +104,19 @@ export default class extends React.Component {
                                                         return (
                                                             <a
                                                                 href = '#progresses'
+                                                                key = {valueItem.id}
                                                                 onClick = {() => {
                                                                     setTimeout(() => {
                                                                         if(valueItem.type === 'productivity') {
-                                                                            alert(`${valueItem.activityName} (${valueItem.spendMinutes} mins)\n\n${valueItem.taskName}\nProgress: ${valueItem.progress}`)
+                                                                            let textToShow = `${valueItem.activityName} (${valueItem.spendMinutes} mins)\n\n${valueItem.taskName}`
+
+                                                                            if(valueItem.progress !== '') {
+                                                                                textToShow = `${textToShow}\nProgress: ${valueItem.progress}`
+                                                                            }
+
+                                                                            alert(textToShow)
                                                                         } else if(valueItem.type === 'break') {
-                                                                            alert(`Break (' + ${valueItem.spendMinutes} + ' mins)`)
+                                                                            alert(`Break (${valueItem.spendMinutes} mins)`)
                                                                         }
                                                                     }, 100)
                                                                 }}
