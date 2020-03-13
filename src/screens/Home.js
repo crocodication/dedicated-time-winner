@@ -1,6 +1,7 @@
 import React from 'react'
 
 import moment from 'moment'
+import 'moment/locale/id'
 
 import ProductivityItem from '../components/ProductivityItem'
 import BreakItem from '../components/BreakItem'
@@ -96,6 +97,49 @@ export default class extends React.Component {
 						{mode === 'View Edit' ? 'Back to Main Area' : 'Go to View-Edit Area'}
 					</a>
 				</div>
+
+				{
+					mode === 'View Edit' ?
+						<div
+							className = 'date-indicator-container'
+						>
+							<a
+								className = 'date-navigator'
+								href = '/#'
+								onClick = {() => this.incrementSelectedDateWith(-1)}
+							>
+								{'< Previous day'}
+							</a>
+
+							<p
+								className = 'date-indicator'
+								href = '/#'
+							>
+								{moment(selectedDate).format('DD MMMM YYYY')}
+							</p>
+
+							{
+								selectedDate === moment().format('YYYY-MM-DD') ?
+									<div
+										style = {{
+											marginLeft: 20,
+											marginRight: 20,
+											width: 92.5
+										}}
+									/>
+									:
+									<a
+										className = 'date-navigator'
+										href = '/#'
+										onClick = {() => this.incrementSelectedDateWith(1)}
+									>
+										{'Next day >'}
+									</a>
+							}
+						</div>
+						:
+						null
+				}
 
 				<div
 					className = 'home-content-container'
@@ -759,5 +803,13 @@ export default class extends React.Component {
 
 			this.setState({colorsData})
 		}
+	}
+
+	incrementSelectedDateWith(number) {
+		const date = new Date(this.state.selectedDate)
+
+		date.setDate(date.getDate() + number)
+		
+		this.setState({selectedDate: moment(date).format('YYYY-MM-DD')})
 	}
 }
