@@ -29,7 +29,7 @@ export default class extends React.Component {
 		isProcessingCount: false,
 		isShowPerformanceChart: false,
 		mode: 'Main',
-		selectedDate: moment('2020-03-12').format('YYYY-MM-DD')
+		selectedDate: moment().format('YYYY-MM-DD')
 	}
 
 	componentDidMount() {
@@ -535,6 +535,7 @@ export default class extends React.Component {
 		}
 
 		this.setState({
+			selectedDate: moment().format('YYYY-MM-DD'),
 			index: index + this.progresses.length - 1,
 			data: newData
 		})
@@ -558,6 +559,7 @@ export default class extends React.Component {
 		newData[index].dayDate = dayDate
 
 		this.setState({
+			selectedDate: moment().format('YYYY-MM-DD'),
 			isBreakProcessingCount: false,
 			data: newData,
 			index: newIndex
@@ -742,8 +744,6 @@ export default class extends React.Component {
 			}
 
 			localStorage.setItem(keys.LOCAL_STORAGE_DATA, JSON.stringify(newData))
-
-			navigator.clipboard.writeText(JSON.stringify(newData, null, 4))
 		}
 	}
 

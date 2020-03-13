@@ -17,11 +17,6 @@ export default class extends React.Component {
 
     async componentDidMount() {
         let progresses = await localStorage.getItem(keys.LOCAL_STORAGE_RUNNING_PROGRESS)
-        const progressesDayDate = await localStorage.getItem(keys.LOCAL_STORAGE_RUNNING_PROGRESS_DAY_DATE)
-
-        if(progressesDayDate === null) {
-            localStorage.setItem(keys.LOCAL_STORAGE_RUNNING_PROGRESS_DAY_DATE, moment().format('YYYY-MM-DD'))
-        }
 
         if(progresses !== null) {
             progresses = JSON.parse(progresses)
@@ -40,7 +35,8 @@ export default class extends React.Component {
                     startedAt: this.state.startTime.toString(),
                     minutes: 0,
                     emoji: '',
-                    type: 'productivity'
+                    type: 'productivity',
+                    dayDate: moment().format('YYYY-MM-DD')
                 }
             ]))
         }
@@ -114,6 +110,7 @@ export default class extends React.Component {
                                         <a
                                             className = 'counter-choice-button'
                                             href = '/#'
+                                            key = {JSON.stringify(item)}
                                             onClick = {() => this.markProgressAs(item)}
                                         >
                                             {item.value}
@@ -123,6 +120,7 @@ export default class extends React.Component {
                                     return (
                                         <div
                                             className = 'counter-choice-button'
+                                            key = {JSON.stringify(item)}
                                             style = {{
                                                 opacity: 0.3
                                             }}
@@ -179,25 +177,27 @@ export default class extends React.Component {
     }
 
     async markProgressAs(progressState) {
-        await localStorage.removeItem(keys.LOCAL_STORAGE_RUNNING_PROGRESS)
-        
+        let savedLocalProgresses = await localStorage.getItem(keys.LOCAL_STORAGE_RUNNING_PROGRESS)
+
         const { props, state } = this
         const { minutes, progresses, startTime } = state
 
-        const newProgresses = JSON.parse(JSON.stringify(progresses)).concat({
+        const newProgress = {
             startedAt: startTime.format('HH:mm'),
             minutes,
             emoji: progressState.value.split(' ')[0].trim(),
             type: 'productivity'
-        })
-
-        const progressesDayDate = await localStorage.getItem(keys.LOCAL_STORAGE_RUNNING_PROGRESS_DAY_DATE)
-
-        for(const progress of newProgresses) {
-            progress.dayDate = progressesDayDate
         }
 
-        await localStorage.removeItem(keys.LOCAL_STORAGE_RUNNING_PROGRESS_DAY_DATE)
+        if(savedLocalProgresses !== null) {
+            savedLocalProgresses = JSON.parse(savedLocalProgresses)
+
+            newProgress.dayDate = savedLocalProgresses[savedLocalProgresses.length - 1].dayDate
+        }
+
+        const newProgresses = JSON.parse(JSON.stringify(progresses)).concat(newProgress)
+
+        await localStorage.removeItem(keys.LOCAL_STORAGE_RUNNING_PROGRESS)
 
         props.sendProgresses(newProgresses)
 
@@ -208,12 +208,20 @@ export default class extends React.Component {
         const { state } = this
         const { isBreaking, minutes, progresses, startTime } = state
 
+        const newProgresses = JSON.parse(JSON.stringify(progresses))
+
         const newProgress = {
             startedAt: startTime.format('HH:mm'),
             minutes
         }
 
-        const newProgresses = JSON.parse(JSON.stringify(progresses))
+        let savedLocalProgresses = await localStorage.getItem(keys.LOCAL_STORAGE_RUNNING_PROGRESS)
+
+        if(savedLocalProgresses !== null) {
+            savedLocalProgresses = JSON.parse(savedLocalProgresses)
+
+            newProgress.dayDate = savedLocalProgresses[savedLocalProgresses.length - 1].dayDate
+        }
 
         if(!isBreaking) {
             await this.setState({progresses: newProgresses.concat({
@@ -226,7 +234,8 @@ export default class extends React.Component {
                 this.state.progresses.concat({
                     startedAt: moment().toString(),
                     minutes: 0,
-                    type: 'break'
+                    type: 'break',
+                    dayDate: moment().format('YYYY-MM-DD')
                 })
             ))
         } else {
@@ -240,7 +249,8 @@ export default class extends React.Component {
                     startedAt: moment().toString(),
                     minutes: 0,
                     emoji: '',
-                    type: 'productivity'
+                    type: 'productivity',
+                    dayDate: moment().format('YYYY-MM-DD')
                 })
             ))
         }
