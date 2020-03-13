@@ -138,110 +138,113 @@ export default class extends React.Component {
 
 					{
 						data.map((dataItem, dataIndex) => {
-							if(dataItem.dayDate === selectedDate) {
-								return (
-									<div
-										key = {dataItem.id}
-									>
-										{
-											dataIndex !== 0 ?
-												(
-													mode === 'View Edit' && index != null && dataIndex <= index + 1 ?	
-														<div
-															className = 'item-filler'
-														>
-															<div
-																className = 'add-item-filler-container'
-															>
+							return (
+								<div
+									key = {dataItem.id}
+								>
+									{
+										dataItem.dayDate === undefined || dataItem.dayDate === selectedDate ?
+											<>
+												{
+													dataItem.id !== this.getTodayTopMostItemId() ?
+														(
+															mode === 'View Edit' && index != null && dataIndex <= index + 1 ?	
 																<div
-																	className = 'add-item'
-																	style = {{
-																		margin: 0
-																	}}
+																	className = 'item-filler'
 																>
-																	<a
-																		href = '/#'
-																		onClick = {() => this.addTask(dataIndex)}
+																	<div
+																		className = 'add-item-filler-container'
 																	>
-																		<p>
-																			+ Add Task
-																		</p>
-																	</a>
+																		<div
+																			className = 'add-item'
+																			style = {{
+																				margin: 0
+																			}}
+																		>
+																			<a
+																				href = '/#'
+																				onClick = {() => this.addTask(dataIndex)}
+																			>
+																				<p>
+																					+ Add Task
+																				</p>
+																			</a>
+																		</div>
+
+																		<div
+																			className = 'add-item-divider'
+																		/>
+
+																		<div
+																			className = 'add-item'
+																			style = {{
+																				margin: 0
+																			}}
+																		>
+																			<a
+																				href = '/#'
+																				onClick = {() => this.addBreak(dataIndex)}
+																			>
+																				<p>
+																					+ Add Break
+																				</p>
+																			</a>
+																		</div>
+																	</div>
 																</div>
-	
+																:
 																<div
-																	className = 'add-item-divider'
+																	className = 'item-filler-permanent'
 																/>
-	
-																<div
-																	className = 'add-item'
-																	style = {{
-																		margin: 0
-																	}}
-																>
-																	<a
-																		href = '/#'
-																		onClick = {() => this.addBreak(dataIndex)}
-																	>
-																		<p>
-																			+ Add Break
-																		</p>
-																	</a>
-																</div>
-															</div>
-														</div>
+														)
 														:
-														<div
-															className = 'item-filler-permanent'
-														/>
-												)
-												:
-												null
-										}
-	
-										<div
-											style = {{
-												opacity: (
-													(
-														mode === 'Main' &&
-														index !== null &&
-														index !== dataIndex
-													)
-													||
-													(
-														mode === 'View Edit' &&
-														index !== null &&
-														index < dataIndex
-													)
-												) ? FADE_OPACITY : 1
-											}}
-										>
-											{
-												dataItem.type === 'productivity' ?
-													<ProductivityItem
-														focusAtIndex = {index}
-														index = {dataIndex}
-														item = {dataItem}
-														mode = {mode}
-														onRemove = {() => this.removeItem(dataIndex)}
-														onStart = {() => this.setState({isProcessingCount: true})}
-													/>
-													:
-													<BreakItem
-														focusAtIndex = {index}
-														index = {dataIndex}
-														item = {dataItem}
-														mode = {mode}
-														onRemove = {() => this.removeItem(dataIndex)}
-														onStart = {() => this.setState({isBreakProcessingCount: true})}
-													/>
-											}
-										</div>
-									</div>
-								)
-							} else {
-								return null
-							}
+														null
+												}
+
+												<div
+													style = {{
+														opacity: (
+															(
+																mode === 'Main' &&
+																index !== null &&
+																index !== dataIndex
+															)
+															||
+															(
+																mode === 'View Edit' &&
+																index !== null &&
+																index < dataIndex
+															)
+														) ? FADE_OPACITY : 1
+													}}
+												>
+													{
+														dataItem.type === 'productivity' ?
+															<ProductivityItem
+																focusAtIndex = {index}
+																index = {dataIndex}
+																item = {dataItem}
+																mode = {mode}
+																onRemove = {() => this.removeItem(dataIndex)}
+																onStart = {() => this.setState({isProcessingCount: true})}
+															/>
+															:
+															<BreakItem
+																focusAtIndex = {index}
+																index = {dataIndex}
+																item = {dataItem}
+																mode = {mode}
+																onRemove = {() => this.removeItem(dataIndex)}
+																onStart = {() => this.setState({isBreakProcessingCount: true})}
+															/>
+													}
+												</div>
+											</>
+											:
+											null
+									}
+								</div>
+							)
 						}
 					)}
 
@@ -331,11 +334,118 @@ export default class extends React.Component {
 		)
 	}
 
+	getTodayTopMostItemId() {
+		let id = -1
+
+		const latestData = JSON.parse(JSON.stringify(this.state.data))
+		latestData.reverse()
+		console.log(`latest data is ${JSON.stringify(latestData, null, 4)}`)
+
+		for(const dataIndex in latestData) {
+			if(this.state.selectedDate === moment().format('YYYY-MM-DD')) {
+				if(latestData[dataIndex] === undefined || latestData[dataIndex].dayDate === this.state.selectedDate) {
+					id = latestData[dataIndex].id
+				}
+			} else {
+				if(latestData[dataIndex].dayDate === this.state.selectedDate) {
+					id = latestData[dataIndex].id
+				}
+			}
+		}
+
+		console.log(`id is ${id}`)
+
+		return id
+	}
+
 	async loadData() {
 		// localStorage.removeItem(keys.LOCAL_STORAGE_DATA)
 		// localStorage.removeItem(keys.LOCAL_STORAGE_INDEX)
 		// localStorage.removeItem(keys.LOCAL_STORAGE_RUNNING_PROGRESS)
 		// localStorage.removeItem(keys.LOCAL_STORAGE_RUNNING_BREAK_PROGRESS)
+		// await localStorage.setItem(keys.LOCAL_STORAGE_DATA, `
+		// 	[{
+		// 		"type": "productivity",
+		// 		"activityName": "Monic",
+		// 		"taskName": "Update PM",
+		// 		"startedAt": "11:51",
+		// 		"minutes": 30,
+		// 		"emoji": "💪",
+		// 		"id": 5,
+		// 		"dayDate": "2020-03-13"
+		// 	},
+		// 	{
+		// 		"type": "productivity",
+		// 		"activityName": "Sewa-Sewa",
+		// 		"taskName": "Memasang API home",
+		// 		"startedAt": "11:11",
+		// 		"minutes": 40,
+		// 		"emoji": "💪",
+		// 		"id": 12,
+		// 		"dayDate": "2020-03-13"
+		// 	},
+		// 	{
+		// 		"type": "break",
+		// 		"startedAt": "11:01",
+		// 		"minutes": 10,
+		// 		"id": 11,
+		// 		"dayDate": "2020-03-13"
+		// 	},
+		// 	{
+		// 		"type": "productivity",
+		// 		"activityName": "Sewa-Sewa",
+		// 		"taskName": "Memasang API home",
+		// 		"startedAt": "10:11",
+		// 		"minutes": 50,
+		// 		"emoji": "",
+		// 		"id": 10,
+		// 		"dayDate": "2020-03-13"
+		// 	},
+		// 	{
+		// 		"type": "break",
+		// 		"startedAt": "09:41",
+		// 		"minutes": 30,
+		// 		"id": 9,
+		// 		"dayDate": "2020-03-13"
+		// 	},
+		// 	{
+		// 		"type": "productivity",
+		// 		"activityName": "Sewa-Sewa",
+		// 		"taskName": "Memasang API home",
+		// 		"startedAt": "08:31",
+		// 		"minutes": 70,
+		// 		"emoji": "",
+		// 		"id": 4,
+		// 		"dayDate": "2020-03-13"
+		// 	},
+		// 	{
+		// 		"type": "productivity",
+		// 		"activityName": "Dedicated Time Winner",
+		// 		"taskName": "Day date progress diberikan langsung ketika pertama kali",
+		// 		"startedAt": "09:21",
+		// 		"minutes": 90,
+		// 		"emoji": "💪",
+		// 		"id": 7,
+		// 		"dayDate": "2020-03-12"
+		// 	},
+		// 	{
+		// 		"type": "break",
+		// 		"startedAt": "09:01",
+		// 		"minutes": 20,
+		// 		"id": 6,
+		// 		"dayDate": "2020-03-12"
+		// 	},
+		// 	{
+		// 		"type": "productivity",
+		// 		"activityName": "Dedicated Time Winner",
+		// 		"taskName": "Day date progress diberikan langsung ketika pertama kali",
+		// 		"startedAt": "08:31",
+		// 		"minutes": 30,
+		// 		"emoji": "",
+		// 		"id": 3,
+		// 		"dayDate": "2020-03-12"
+		// 	}]
+		// `)
 
 		let data = await localStorage.getItem(keys.LOCAL_STORAGE_DATA)
 		let newIndex = await localStorage.getItem(keys.LOCAL_STORAGE_INDEX)
@@ -618,9 +728,7 @@ export default class extends React.Component {
 		})
 
 		if(progressIndex < this.progresses.length - 1) {
-			setTimeout(() => {
-				this.updateProgresses(newData, currentIndex, Number(progressIndex) + 1)
-			}, 150)
+			setTimeout(() => this.updateProgresses(newData, currentIndex, Number(progressIndex) + 1), 150)
 		} else {
 			if(currentIndex) {
 				localStorage.setItem(keys.LOCAL_STORAGE_INDEX, currentIndex)
@@ -629,6 +737,8 @@ export default class extends React.Component {
 			}
 
 			localStorage.setItem(keys.LOCAL_STORAGE_DATA, JSON.stringify(newData))
+
+			navigator.clipboard.writeText(JSON.stringify(newData, null, 4))
 		}
 	}
 
