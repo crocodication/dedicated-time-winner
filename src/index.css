@@ -169,6 +169,7 @@ a {
     font-size: 28px;
     font-weight: bold;
     margin-top: 10px;
+    max-width: calc(100vw - 230px);
 }
 
 .productivity-item-started-at-and-minutes {

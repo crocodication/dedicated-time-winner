@@ -373,7 +373,7 @@ export default class extends React.Component {
 		// 		"type": "productivity",
 		// 		"activityName": "Monic",
 		// 		"taskName": "Update PM",
-		// 		"startedAt": "11:51",
+		// 		"startedAt": "09:51",
 		// 		"minutes": 30,
 		// 		"emoji": "💪",
 		// 		"id": 5,
@@ -383,7 +383,7 @@ export default class extends React.Component {
 		// 		"type": "productivity",
 		// 		"activityName": "Sewa-Sewa",
 		// 		"taskName": "Memasang API home",
-		// 		"startedAt": "11:11",
+		// 		"startedAt": "09:11",
 		// 		"minutes": 40,
 		// 		"emoji": "💪",
 		// 		"id": 12,
@@ -391,7 +391,7 @@ export default class extends React.Component {
 		// 	},
 		// 	{
 		// 		"type": "break",
-		// 		"startedAt": "11:01",
+		// 		"startedAt": "09:01",
 		// 		"minutes": 10,
 		// 		"id": 11,
 		// 		"dayDate": "2020-03-13"
@@ -400,7 +400,7 @@ export default class extends React.Component {
 		// 		"type": "productivity",
 		// 		"activityName": "Sewa-Sewa",
 		// 		"taskName": "Memasang API home",
-		// 		"startedAt": "10:11",
+		// 		"startedAt": "08:11",
 		// 		"minutes": 50,
 		// 		"emoji": "",
 		// 		"id": 10,
@@ -408,7 +408,7 @@ export default class extends React.Component {
 		// 	},
 		// 	{
 		// 		"type": "break",
-		// 		"startedAt": "09:41",
+		// 		"startedAt": "07:41",
 		// 		"minutes": 30,
 		// 		"id": 9,
 		// 		"dayDate": "2020-03-13"
@@ -417,7 +417,7 @@ export default class extends React.Component {
 		// 		"type": "productivity",
 		// 		"activityName": "Sewa-Sewa",
 		// 		"taskName": "Memasang API home",
-		// 		"startedAt": "08:31",
+		// 		"startedAt": "06:31",
 		// 		"minutes": 70,
 		// 		"emoji": "",
 		// 		"id": 4,
