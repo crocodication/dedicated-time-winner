@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { Helmet } from 'react-helmet'
+
 import moment from 'moment'
 
 import keys from '../refs/keys'
@@ -53,6 +55,16 @@ export default class extends React.Component {
             <div
                 className = 'counter-modal-background-container'
             >
+                <Helmet>
+					<meta
+						charSet = "utf-8"
+					/>
+
+					<title>
+                        {this.toTickNumber(minutes)}:{this.toTickNumber(seconds)} - {isBreaking ? 'Breaking' : currentTask}
+					</title>
+				</Helmet>
+
                 <div
                     className = 'counter-modal-container'
                     style = {{

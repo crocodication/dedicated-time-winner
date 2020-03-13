@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { Helmet } from 'react-helmet'
+
 import moment from 'moment'
 
 export default class extends React.Component {
@@ -25,6 +27,16 @@ export default class extends React.Component {
                     top: 0
                 }}
             >
+                <Helmet>
+					<meta
+						charSet = "utf-8"
+					/>
+
+					<title> 
+						This week's performance chart
+					</title>
+				</Helmet>
+
                 <a
                     href = '/#'
                     onClick = {this.props.onDismiss}

@@ -9,6 +9,7 @@
     "moment": "latest",
     "react": "latest",
     "react-dom": "latest",
+    "react-helmet": "latest",
     "react-router-dom": "latest",
     "react-scripts": "latest"
   },

@@ -1,12 +1,19 @@
 import React from 'react'
 
+import { Helmet } from 'react-helmet'
+
 export default class extends React.Component {
     state = {
         activityName: '',
         taskName: ''
     }
 
-    handleActivityNameChange = (event) => this.setState({activityName: event.target.value})
+    handleActivityNameChange = (event) => {
+        this.setState({
+            activityName: event.target.value,
+            taskName: ''
+        })
+    }
     handleTaskNameChange = (event) => this.setState({taskName: event.target.value})
 
     componentDidMount() {
@@ -24,6 +31,16 @@ export default class extends React.Component {
             <div
                 className = 'add-task-modal-main-container'
             >
+                <Helmet>
+					<meta
+						charSet = "utf-8"
+					/>
+
+					<title> 
+						{activityName.trim() === '' ? 'Add Task' : `Add ${activityName}'s Task`}
+					</title>
+				</Helmet>
+
                 <div
                     className = 'add-task-modal-background'
                     onClick = {onDismiss}

@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { Helmet } from "react-helmet"
+
 import moment from 'moment'
 import 'moment/locale/id'
 
@@ -48,6 +50,16 @@ export default class extends React.Component {
 					backgroundColor: mode === 'Main' ? 'black' : 'rgb(50,50,50)'
 				}}
 			>
+				<Helmet>
+					<meta
+						charSet = "utf-8"
+					/>
+
+					<title> 
+						{mode === 'Main' ? 'Main Area' : `View Edit Area - ${moment(selectedDate).format('DD MMMM YYYY')}`}
+					</title>
+				</Helmet>
+
 				<div
 					className = 'home-title-container'
 				>
