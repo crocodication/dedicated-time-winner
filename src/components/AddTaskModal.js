@@ -66,10 +66,14 @@ export default class extends React.Component {
 
                     <input
                         className = "add-task-modal-input"
-                        id = "task-name"
-                        name = "task-name"
+                        disabled = {activityName.trim() === ''}
+                        id = {`${activityName.trim()}-task-name`}
+                        name = {`${activityName.trim()}-task-name`}
                         onChange = {this.handleTaskNameChange}
                         placeholder = 'Input task name...'
+                        style = {{
+                            backgroundColor: activityName.trim() === '' ? 'darkgray' : 'white'
+                        }}
                         type = "text"
                         value = {taskName}
                     />
