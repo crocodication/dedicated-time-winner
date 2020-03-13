@@ -3,19 +3,31 @@ import ReactDOM from 'react-dom'
 
 import { BrowserRouter } from 'react-router-dom'
 
-import { register } from './serviceWorker'
+import { unregister } from './serviceWorker'
 
-import App from './App'
-
-import './index.css'
+import { Route, Switch, Redirect } from 'react-router-dom'
 
 ReactDOM.render(
     (
         <BrowserRouter>
-            <App />
+            <Switch>
+                <Route
+                    path = "/v1"
+                    component = {require('./v1/App').default}
+                />
+
+                <Route
+                    path = "/v2"
+                    component = {require('./v2/App').default}
+                />
+
+                <Redirect
+                    to = "/v2/#"
+                />
+            </Switch>
         </BrowserRouter>
     ),
     document.getElementById('root')
 )
 
-register()
+unregister()

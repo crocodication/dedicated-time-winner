@@ -70,7 +70,7 @@ export default class extends React.Component {
 
                     <a
                         className = 'break-counter-button'
-                        href = '/#'
+                        href = '/v2/#'
                         onClick = {() => this.done()}
                         style = {{
                             backgroundColor: 'mediumseagreen'

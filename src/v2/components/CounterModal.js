@@ -121,7 +121,7 @@ export default class extends React.Component {
                                     return (
                                         <a
                                             className = 'counter-choice-button'
-                                            href = '/#'
+                                            href = '/v2/#'
                                             key = {JSON.stringify(item)}
                                             onClick = {() => this.markProgressAs(item)}
                                         >
@@ -146,7 +146,7 @@ export default class extends React.Component {
 
                         <a
                             className = 'counter-break-button'
-                            href = '/#'
+                            href = '/v2/#'
                             onClick = {() => this.setBreakOrContinue()}
                             style = {{
                                 backgroundColor: isBreaking ? 'mediumseagreen' : 'crimson'
