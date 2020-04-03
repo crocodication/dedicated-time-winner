@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/dedicated-time-winner/static/css/main.4e5ef7b0.chunk.css",
+    "main.js": "/dedicated-time-winner/static/js/main.841f4a7f.chunk.js",
+    "main.js.map": "/dedicated-time-winner/static/js/main.841f4a7f.chunk.js.map",
+    "runtime-main.js": "/dedicated-time-winner/static/js/runtime-main.568784e0.js",
+    "runtime-main.js.map": "/dedicated-time-winner/static/js/runtime-main.568784e0.js.map",
+    "static/js/2.2816a81c.chunk.js": "/dedicated-time-winner/static/js/2.2816a81c.chunk.js",
+    "static/js/2.2816a81c.chunk.js.map": "/dedicated-time-winner/static/js/2.2816a81c.chunk.js.map",
+    "index.html": "/dedicated-time-winner/index.html",
+    "precache-manifest.8f0f05c0d4bdd3ee9156f49b2eae6672.js": "/dedicated-time-winner/precache-manifest.8f0f05c0d4bdd3ee9156f49b2eae6672.js",
+    "service-worker.js": "/dedicated-time-winner/service-worker.js",
+    "static/css/main.4e5ef7b0.chunk.css.map": "/dedicated-time-winner/static/css/main.4e5ef7b0.chunk.css.map",
+    "static/js/2.2816a81c.chunk.js.LICENSE.txt": "/dedicated-time-winner/static/js/2.2816a81c.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.568784e0.js",
+    "static/js/2.2816a81c.chunk.js",
+    "static/css/main.4e5ef7b0.chunk.css",
+    "static/js/main.841f4a7f.chunk.js"
+  ]
+}
