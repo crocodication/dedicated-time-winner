@@ -55,7 +55,7 @@ export default class extends React.Component {
                                 mode === 'Main' && focusAtIndex === index ?
                                     <a
                                         className = 'break-item-start-button'
-                                        href = '/v2/#'
+                                        href = '/dedicated-time-winner/#'
                                         onClick = {onStart}
                                     >
                                         Start
@@ -68,7 +68,7 @@ export default class extends React.Component {
                                 mode === 'View Edit' ?
                                     <a
                                         className = 'break-item-remove-button'
-                                        href = '/v2/#'
+                                        href = '/dedicated-time-winner/#'
                                         onClick = {onRemove}
                                     >
                                         Remove

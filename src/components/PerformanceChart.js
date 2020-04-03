@@ -38,7 +38,7 @@ export default class extends React.Component {
 				</Helmet>
 
                 <a
-                    href = '/v2/#'
+                    href = '/dedicated-time-winner/#'
                     onClick = {this.props.onDismiss}
                     style = {{
                         backgroundColor: 'rgba(0,0,0,0.8)',

@@ -59,7 +59,7 @@ export default class extends React.Component {
                         </h2>
 
                         <a
-                            href = '/v2/#'
+                            href = '/dedicated-time-winner/#'
                             onClick = {onDismiss}
                         >
                             <p
@@ -108,7 +108,7 @@ export default class extends React.Component {
                             :
                             <a
                                 className = 'add-task-modal-add-button'
-                                href = '/v2/#'
+                                href = '/dedicated-time-winner/#'
                                 onClick = {() => onAddTask(activityName, taskName)}
                                 style = {{
                                     backgroundColor: 'mediumseagreen'

@@ -80,7 +80,7 @@ export default class extends React.Component {
 						mode === 'View Edit' ?
 							<a
 								className = 'top-button'
-								href = '/v2/#'
+								href = '/dedicated-time-winner/#'
 								onClick = {() => this.seeMyPerformance()}
 								style = {{
 									opacity: mode === 'Main'  && index !== null && selectedDate === moment().format('YYYY-MM-DD') ? FADE_OPACITY : 1
@@ -94,7 +94,7 @@ export default class extends React.Component {
 
 					<a
 						className = 'top-button'
-						href = '/v2/#'
+						href = '/dedicated-time-winner/#'
 						onClick = {() => {
 							if(mode === 'View Edit') {
 								this.setState({selectedDate: moment().format('YYYY-MM-DD')})
@@ -117,7 +117,7 @@ export default class extends React.Component {
 						>
 							<a
 								className = 'date-navigator'
-								href = '/v2/#'
+								href = '/dedicated-time-winner/#'
 								onClick = {() => this.incrementSelectedDateWith(-1)}
 							>
 								{'< Previous day'}
@@ -125,7 +125,7 @@ export default class extends React.Component {
 
 							<p
 								className = 'date-indicator'
-								href = '/v2/#'
+								href = '/dedicated-time-winner/#'
 							>
 								{moment(selectedDate).format('DD MMMM YYYY')}
 							</p>
@@ -142,7 +142,7 @@ export default class extends React.Component {
 									:
 									<a
 										className = 'date-navigator'
-										href = '/v2/#'
+										href = '/dedicated-time-winner/#'
 										onClick = {() => this.incrementSelectedDateWith(1)}
 									>
 										{'Next day >'}
@@ -168,7 +168,7 @@ export default class extends React.Component {
 									className = 'add-item'
 								>
 									<a
-										href = '/v2/#'
+										href = '/dedicated-time-winner/#'
 										onClick = {() => this.addTask(0)}
 									>
 										<p>
@@ -185,7 +185,7 @@ export default class extends React.Component {
 									className = 'add-item'
 								>
 									<a
-										href = '/v2/#'
+										href = '/dedicated-time-winner/#'
 										onClick = {() => this.addBreak(0)}
 									>
 										<p>
@@ -224,7 +224,7 @@ export default class extends React.Component {
 																			}}
 																		>
 																			<a
-																				href = '/v2/#'
+																				href = '/dedicated-time-winner/#'
 																				onClick = {() => this.addTask(dataIndex)}
 																			>
 																				<p>
@@ -244,7 +244,7 @@ export default class extends React.Component {
 																			}}
 																		>
 																			<a
-																				href = '/v2/#'
+																				href = '/dedicated-time-winner/#'
 																				onClick = {() => this.addBreak(dataIndex)}
 																			>
 																				<p>
@@ -324,7 +324,7 @@ export default class extends React.Component {
 									className = 'add-item'
 								>
 									<a
-										href = '/v2/#'
+										href = '/dedicated-time-winner/#'
 										onClick = {() => this.addTask(data.length)}
 									>
 										<p>
@@ -341,7 +341,7 @@ export default class extends React.Component {
 									className = 'add-item'
 								>
 									<a
-										href = '/v2/#'
+										href = '/dedicated-time-winner/#'
 										onClick = {() => this.addBreak(data.length)}
 									>
 										<p>

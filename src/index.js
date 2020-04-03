@@ -5,24 +5,18 @@ import { BrowserRouter } from 'react-router-dom'
 
 import { unregister } from './serviceWorker'
 
-import { Route, Switch, Redirect } from 'react-router-dom'
+import { Switch, Redirect } from 'react-router-dom'
+
+import App from './App'
 
 ReactDOM.render(
     (
         <BrowserRouter>
             <Switch>
-                <Route
-                    path = "/v1"
-                    component = {require('./v1/App').default}
-                />
-
-                <Route
-                    path = "/v2"
-                    component = {require('./v2/App').default}
-                />
+                <App />
 
                 <Redirect
-                    to = "/v2/#"
+                    to = "/dedicated-time-winner/#"
                 />
             </Switch>
         </BrowserRouter>
